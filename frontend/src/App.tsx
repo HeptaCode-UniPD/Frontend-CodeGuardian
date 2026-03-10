@@ -18,7 +18,6 @@ const router = createBrowserRouter([
   }
 ]);
 
-// 2. Il componente App "accende" la mappa
 export default function App() {
   return <RouterProvider router={router} />;
 }
