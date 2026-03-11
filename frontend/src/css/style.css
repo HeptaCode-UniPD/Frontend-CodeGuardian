@@ -4,6 +4,252 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+
+  /* font */
+  --normal-txt: Segoe UI, SegoeUI, Arial, sans-serif
+  --code-txt: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* colori di default */
+  --txt : #f2f2f2;
+  --button: #3B8640;
+  --border: #3D444D;
+  --interactive-area: #262C36;
+  --bgcolor: #212830;
+  --nav-bg: #151B23;
+  --added-code: #516525;
+  --removed-code: #791313;
+  --detail-txt: #9198A1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body{
+  margin:0 20px;
+  font-size: 100%;
+  line-height: 1.5em;
+  font-family: var(--normal-txt);
+  background-color: var(--bgcolor);
+  color: var(--txt);
+  font-weight: lighter;
+  scroll-behavior: smooth;
+}
+
+button{
+  font-family: var(--normal-txt);
+  font-size: 100%;
+}
+
+button:hover{
+  cursor: pointer;
+}
+
+summary:hover{
+  cursor: pointer;
+}
+
+/* DETTAGLIREPO  */
+#dettagli-repo .diffCode{
+  height: 25em;
+  overflow: auto;
+}
+
+.percentage {
+  position: relative;
+  display: inline-block;
+  --radius: 50;
+  --stroke-width: 8;
+  --normalized-radius: calc(var(--radius) - (var(--stroke-width) / 2));
+  --pi: 3.14159265359;
+  --circumference: calc(2 * var(--pi) * var(--normalized-radius));
+}
+
+.percentage svg {
+  transform: rotate(-90deg);
+}
+
+.circle-bg, .circle-progress {
+  stroke-width: var(--stroke-width);
+  r: var(--normalized-radius);
+}
+
+.circle-bg {
+  stroke: #262c36;
+}
+
+.circle-progress {
+  fill: transparent;
+  stroke-dasharray: var(--circumference);
+  stroke-dashoffset: calc(var(--circumference) - (var(--percentage) / 100 * var(--circumference)));
+  transition: stroke-dashoffset 1s ease-out;
+  stroke-linecap: round;
+}
+
+.top-performance { stroke: #22c55e; }
+.medium-performance { stroke: #f97316; }
+.bad-performance { stroke: #ef4444; }
+
+.percentage-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+}
+
+.label-persentage{
+  display: block;
+}
+
+#report-percentage{
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  gap: 0.5em;
+  padding: 0;
+}
+
+#report-percentage .label-persentage{
+  overflow-wrap: break-word;
+}
+
+#dettagli-repo #analisi-block button{
+  border-radius: 0.5em;
+  border: solid 2px var(--button);
+  background-color: transparent;
+  padding: 0.5em;
+  margin-top: 0.7em;
+  transition: 0.3s;
+}
+
+#dettagli-repo #analisi-block button:hover{
+  background-color: var(--button);
+}
+
+#dettagli-repo #analisi-block button#start-all{
+  margin-top: 0;
+  background-color: var(--button);
+  width: 100%;
+  transition: 0.3s;
+}
+
+#dettagli-repo #analisi-block button#start-all:hover{
+  background-color: transparent;
+}
+
+#dettagli-repo #details-repo-content{
+  display: flex;
+  gap: 1em;
+}
+
+#dettagli-repo #remediation-block{
+  flex: 0 0 68%;
+  padding: 0 1em;
+  min-width: 0;
+}
+
+#dettagli-repo #analisi-block{
+  flex: 0 0 30%;
+  padding: 0 1em;
+  border-right: solid 2px var(--border);
+}
+
+#dettagli-repo #remediation-list{
+  list-style: none;
+  padding: 0;
+}
+
+#dettagli-repo #remediation-list details{
+  background-color: var(--interactive-area);
+  border-radius: 0.5em;
+  margin: 0.5em 0;
+  border: solid 1px var(--border);
+  padding: 0.5em 1em;
+}
+
+.removed-text{
+  background-color: color-mix(in srgb, var(--removed-code), transparent 50%);
+}
+
+.added-text{
+  background-color: color-mix(in srgb, var(--added-code), transparent 50%);
+}
+
+#dettagli-repo aside{
+  border-top: solid 1px var(--border);
+  border-bottom: solid 1px var(--border);
+  display: flex;
+  margin: 0;
+  gap: 0.5em;
+}
+
+#dettagli-repo aside #delete-repo,
+#dettagli-repo aside a{
+  margin: auto 0;
+}
+
+#dettagli-repo #visibility{
+  margin-top: auto;
+  border: solid 1px var(--border);
+  border-radius: 5em;
+  padding: 0 1em;
+  font-style: italic;
+  color: var(--detail-txt);
+  font-weight: 400;
+  margin-right: auto;
+}
+
+#dettagli-repo #delete-repo button,
+#dettagli-repo aside a{
+  background-color: var(--interactive-area);
+  border: 1px solid var(--border);
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+#dettagli-repo #delete-repo button:hover{
+  background-color: var(--border);
+}
+
+#dettagli-repo #delete-repo button:before
+{
+  content: url('../assets/trash.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+
+#dettagli-repo aside a[target="_blank"]
+{
+  background-color: var(--border);
+  color: var(--txt);
+}
+
+#dettagli-repo aside a[target="_blank"]::before
+{
+  content: url('../assets/github-logo.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+
+#dettagli-repo aside a[target="_blank"]:hover
+{
+  background-color: transparent;
+}
+
+#dettagli-repo aside a[data-discover="true"]
+{
+  color: var(--detail-txt);
+  font-weight: 500;
+}
+
+#dettagli-repo aside a[data-discover="true"]:hover
+{
+  background-color: var(--border);
+  color: var(--txt);
 }

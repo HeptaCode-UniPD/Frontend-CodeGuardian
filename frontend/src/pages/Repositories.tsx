@@ -8,8 +8,13 @@ export default function History() {
       <p>Qui vedrai l'elenco dei repository. Per ora è vuoto, ma almeno funziona il routing!</p>
       
       <nav style={{ marginTop: '20px' }}>
-        <Link to="/" style={{ color: '#007bff', fontSize: '1.2rem' }}>
-          ← Torna alla Home
+        <div>
+        <Link to="/repository/1" style={{ color: '#007bff', fontSize: '1.2rem' }}>
+          Vai alla repo 1
+        </Link>
+        </div>
+        <Link to="/repository/2" style={{ color: '#007bff', fontSize: '1.2rem' }}>
+          Vai alla repo 2
         </Link>
       </nav>
     </div>
