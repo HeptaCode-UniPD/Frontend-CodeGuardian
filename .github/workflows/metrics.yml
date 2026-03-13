@@ -1,0 +1,40 @@
+name: Software Metrics Check (Maintainability)
+
+on: [push, pull_request]
+
+jobs:
+  analyze-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Lizard
+        run: pip install lizard
+
+      - name: Run Maintainability Check
+        # -C 10: Complessità Ciclomatica (MPD07)
+        # -a 6: Parametri per metodo (MPD08)
+        # -L 35: Linee di codice per metodo (MPD09)
+        run: lizard -C 10 -a 6 -L 35 ./
+
+  sonarqube:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube Scan
+        # MPD11: Densità commenti (≤15% warning, ≤5% error)
+        # MPD12: Coefficient of Coupling (≤0.4 warning, ≤0.2 error)
+        uses: SonarSource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
