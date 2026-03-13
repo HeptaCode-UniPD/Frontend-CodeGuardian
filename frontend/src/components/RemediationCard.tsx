@@ -8,30 +8,6 @@ const getDiffProps = (part: Diff.Change) => ({
   className: part.added ? 'added-text' : part.removed ? 'removed-text' : ''
 });
 
-const DiffBlock = ({ part }: { part: Diff.Change }) => {
-  const { prefix, className } = getDiffProps(part);
-  const lines = part.value.split('\n').filter(line => line.trim() !== '');
-
-  return (
-    <div className={className}>
-      {lines.map((line, i) => (
-        <div key={i}>{prefix}{line}</div>
-      ))}
-    </div>
-  );
-};
-
-export const UnifiedDiff = ({ oldCode, newCode }: { oldCode: string, newCode: string }) => {
-  const diffResult = Diff.diffLines(oldCode, newCode);
-  return (
-    <pre>
-      {diffResult.map((part, index) => (
-        <DiffBlock key={index} part={part} />
-      ))}
-    </pre>
-  );
-};
-
 export const RemediationCard = ({ remediation }: { remediation: FileRemediation }) => {
   const [originalCode, setOriginalCode] = useState<string | null>(null);
   const [status, setStatus] = useState<'loading' | 'error' | 'success'>('loading');
@@ -54,3 +30,26 @@ export const RemediationCard = ({ remediation }: { remediation: FileRemediation 
     </div>
   );
 };
+
+function UnifiedDiff({oldCode, newCode} : { oldCode: string, newCode: string }) {
+  const diffResult = Diff.diffLines(oldCode, newCode);
+  return (
+    <article>
+      {diffResult.map((part, index) => (
+        <DiffBlock key={index} part={part} />
+      ))}
+    </article>
+  );
+}
+
+function DiffBlock(props: { part: Diff.Change }) {
+  const { part } = props;
+  const { prefix, className } = getDiffProps(part);
+  const lines = part.value.split('\n').filter(line => line.trim() !== '');
+
+  const renderedLines = lines.map((line, i) => (
+    <div>{i} {prefix}{line}</div>
+  ));
+
+  return <div className={className}>{renderedLines}</div>;
+}

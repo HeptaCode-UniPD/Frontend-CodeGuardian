@@ -1,10 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { type FileRemediation, type Analysis, api} from '../services/api';
-import { getRepoInfo, getFileInfo, checkRepoVisibility} from '../utils/GitHubUtils';
+import { type FileRemediation, type Analysis, api, /*API_URL*/} from '../services/api';
+import { getRepoInfo, getFileInfo} from '../utils/GitHubUtils';
 import { RemediationCard} from '../components/RemediationCard';
 import { CircularProgress} from '../components/CircularProgress';
 import { useParams, Link } from 'react-router-dom';
-// import { api, API_URL, type Analysis } from '../services/api'; // Importa API_URL
 
 const RemediationSection = ({ title, items }: { title: string, items: FileRemediation[] }) => (
   <li>
@@ -18,20 +17,38 @@ const RemediationSection = ({ title, items }: { title: string, items: FileRemedi
   </li>
 );
 
-export default function DettagliRepo() {
+const InfoRepo = ({analisi}:{analisi: Analysis}) => {
+    return(
+        <aside>
+            <h1>{getRepoInfo(analisi.repoUrl).repoName}</h1>
+            <p id="visibility">{analisi.visibility}</p>
+            <form id="delete-repo">
+                <button>Elimina repository</button>
+            </form>
+            <a href={analisi.repoUrl} target="_blank">Vedi su GitHub</a>
+            <Link to="/Repositories">← Indietro</Link>
+        </aside>
+    )
+};
 
+const getAnalysisPayload = async (id: string) => {
+    const dataAnalisi = await api.getAnalysisById(Number(id));
+    if (!dataAnalisi) return null;
+    const [dataRemediation] = await Promise.all([
+        api.getRemediationByRepoId(Number(id)),
+    ]);
+
+    return {
+        analisi: dataAnalisi,
+        remediation: dataRemediation ?? []
+    };
+};
+
+export default function DettagliRepo() {
     const { id } = useParams<{ id: string }>(); //recupero l'id dall'URL per capire che repo sto guardando
-    const [analisi, setAnalisi] = useState<Analysis | null>(null);
+    const [analisi, setAnalisi] = useState<Analysis | null>(null); // useState : crea una variabile di stato, quando viene cambiata, React se ne accorge e ridisegna il componente
     const [remediation, setRemediation] = useState<FileRemediation[] | null>([]);
-    //come funziona, dato che poi lo dimentico:
-    // useState : crea una variabile di stato, quando viene cambiata, React se ne accorge e ridisegna il componente
-    // analisi e setAnalisi : ciò che restituisce useState, il primo è la variabile che contiene i dati attuali,  la seconda
-    //                        è l'unica funzione che ha il permesso di usare per cambiare di valore 'analisi'
-    //Analysis[] : l'interfaccia utilizzata, i dati di 'analisi' devono rispettare il suo formato
-    //(mockAnalysis) : valore iniziale appena la pagina viene caricata (per ora sono valori finti per provare il frontend)
     const [loading, setLoading] = useState(true);
-    //come funziona qeusto pezzo:
-    //loading è booleano e false il valore iniziale perché non devo ottenere dati da DB, poi lo dovrò mettere a true
 
     const gruppi = useMemo(() => ({
         test: remediation?.filter(r => r.type === "Test"),
@@ -39,49 +56,29 @@ export default function DettagliRepo() {
         owasp: remediation?.filter(r => r.type === "OWASP")
     }), [remediation]);
 
-    // mi serve per recuperare i dati (da quanto dice Gemini, poi controllo meglio)
     useEffect(() => {
+        if(!id) return;
         const fetchData = async () => {
             try {
                 setLoading(true);
-
-                const dataAnalisi = await api.getAnalysisById(Number(id));
-                
-                if (dataAnalisi) {
-                    setAnalisi(dataAnalisi);
-
-                    const [dataRemediation] = await Promise.all([
-                        api.getRemediationByRepoId(Number(id)),
-                    ]);
-
-                    setRemediation(dataRemediation ?? []);
-                }
-            } catch (err) {
+            const result = await getAnalysisPayload(id);
+            if (result) {
+                setAnalisi(result.analisi);
+                setRemediation(result.remediation);
+            }} catch (err) {
                 console.error("Errore nel recupero dati:", err);
-            } finally {
-                setLoading(false);
-            }
+            } finally { setLoading(false); }
         };
-
         if (id) fetchData();
     }, [id]);
 
     if (loading) return <p>Caricamento...</p>;
     if (!analisi) return <div>Analisi del repository selezionato non trovata. <Link to="/Repositories">← Indietro</Link></div>;
-
-    // TODO: i pulsanti per avviare analisi e la visualizzazione della remediation proposta cambia a seconda dello stato dell'
-    //analisi, se è in corso i pulsanti non saranno cliccabili e la remediation avrà uno stato di caricamento    
-    return (
+ 
+    return ( // TODO: i pulsanti dovranno cambiare a seconda se l'analisi è avviata o meno
         <div id="dettagli-repo">
-            <aside>
-                <h1>{getRepoInfo(analisi.repoUrl).repoName}</h1>
-                <p id="visibility">{analisi.visibility}</p>
-                <form id="delete-repo">
-                    <button>Elimina repository</button>
-                </form>
-                <a href={analisi.repoUrl} target="_blank">Vedi su GitHub</a>
-                <Link to="/Repositories">← Indietro</Link>
-            </aside>
+
+            <InfoRepo analisi={analisi}/>
 
             <div id="details-repo-content">
                 <div id="analisi-block">
@@ -113,10 +110,7 @@ export default function DettagliRepo() {
                         <RemediationSection title="Correttezza OWASP" items={gruppi.owasp ?? []} />
                     </ul>
                 </div>
-
             </div>
-
         </div>
-
     );
 }
