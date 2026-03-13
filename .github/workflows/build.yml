@@ -24,17 +24,14 @@ jobs:
         run: lizard -C 10 -a 6 -L 35 ./
 
   sonarqube:
+    name: SonarQube
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: SonarQube Scan
-        # MPD11: Densità commenti (≤15% warning, ≤5% error)
-        # MPD12: Coefficient of Coupling (≤0.4 warning, ≤0.2 error)
-        uses: SonarSource/sonarqube-scan-action@master
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
