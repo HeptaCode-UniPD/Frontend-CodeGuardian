@@ -161,6 +161,10 @@ summary:hover{
   padding: 0;
 }
 
+#dettagli-repo #remediation-list li{
+  margin-bottom: 3em;
+}
+
 #dettagli-repo #remediation-list details{
   background-color: var(--interactive-area);
   border-radius: 0.5em;

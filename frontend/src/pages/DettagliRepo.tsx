@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { type FileRemediation, type Analysis, api} from '../services/api';
 import { getRepoInfo, getFileInfo, checkRepoVisibility} from '../utils/GitHubUtils';
 import { RemediationCard} from '../components/RemediationCard';

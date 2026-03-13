@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Repositories from '../pages/Repositories';
 import DettagliRepo from '../pages/DettagliRepo';
 
-// 1. Definiamo la "Mappa" (il tuo vecchio index.php) direttamente qui
 const router = createBrowserRouter([
   {
     path: "/repositories",
@@ -13,7 +12,7 @@ const router = createBrowserRouter([
     element: <Repositories />,
   },
   {
-    path: "/repository/:id",
+    path: "/repository/:id", 
     element: <DettagliRepo />,
   },
   {
@@ -22,6 +21,6 @@ const router = createBrowserRouter([
   }
 ]);
 
-export default function App() {
+export default function Routing() {
   return <RouterProvider router={router} />;
 }
