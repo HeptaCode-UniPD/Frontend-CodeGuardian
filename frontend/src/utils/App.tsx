@@ -4,7 +4,6 @@ import DettagliRepo from '../pages/DettagliRepo';
 import AddRepository from '../pages/AddRepository';
 import UserPage from '../pages/UserPage';
 import Login from '../pages/Login';
-import { isLogged } from '../services/SessionService';
 import { NavBar } from '../components/NavBar';
 
 const RootLayout = () => (

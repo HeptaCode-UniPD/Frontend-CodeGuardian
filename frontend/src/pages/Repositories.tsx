@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getRepositoriesPayload} from '../services/RepositoriesService';
+import { getRepositoriesByUser} from '../services/RepositoriesService';
 import { isLogged, getUserID} from '../services/SessionService';
 import { type Repository} from '../types/types';
 
@@ -16,7 +16,7 @@ export default function Repositories() {
       
       const fetchData = async () => {
         setLoading(true);
-        const result = await getRepositoriesPayload(id);
+        const result = await getRepositoriesByUser(id);
         if (result) {setRepositories(result);}
         setLoading(false); };
 

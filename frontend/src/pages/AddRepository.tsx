@@ -3,6 +3,14 @@ import { Link, useNavigate} from 'react-router-dom';
 import { checkRepoValid, checkRepoToken, checkRepoAccess} from '../services/RepositoriesService';
 import { isLogged} from '../services/SessionService';
 
+const ErrorReport = ({loading, url, hasAccess, isValid, tokenError} : { loading: boolean, url: string, hasAccess: boolean, isValid: boolean, tokenError:boolean}) => (
+  <div>
+    {loading && url && <p id="loading"> Verifica informazioni...</p>}
+    { !loading && url && !hasAccess && <p id="hint">Il repository è privato. Inserisci il tuo Personal Access Token per continuare.</p>}
+    {isValid && tokenError && (<p className='error'>Il token inserito non è valido.</p>)}
+  </div>
+);
+
 export default function AddRepository() {
   isLogged();
   const navigate = useNavigate();
@@ -74,9 +82,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
         )}
 
-        {loading && url && <p id="loading"> Verifica informazioni...</p>}
-        { !loading && url && !hasAccess && <p id="hint">Il repository è privato. Inserisci il tuo Personal Access Token per continuare.</p>}
-        {isValid && tokenError && (<p className='error'>Il token inserito non è valido.</p>)}
+        <ErrorReport loading={loading} url={url} hasAccess={hasAccess} isValid={isValid} tokenError={tokenError}/>
 
         <div id="form-actions">
           <Link to="/repositories" id="annulla">Annulla</Link>

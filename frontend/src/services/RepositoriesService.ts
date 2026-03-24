@@ -1,20 +1,10 @@
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 import * as Types from '../types/types';
 
-export async function getRepositoriesPayload (id: string) {
-    const [repositories] = await Promise.all([
-        getRepositoriesByUser(id),
-    ]);
-
-    return repositories ?? [];
-};
-
-async function getRepositoriesByUser(id: string): Promise<Types.Repository[] | undefined> {
-  return new Promise((resolve) => {
-    const found = Types.mock_repositories.filter(item => 
-      Array.isArray(item.userID) ? item.userID.includes(id) : item.userID === id);
-    resolve(found);
-  });
+export async function getRepositoriesByUser(id: string): Promise<Types.Repository[] | undefined> {
+  const repositories = Types.mock_repositories.filter(item => 
+    Array.isArray(item.userID) ? item.userID.includes(id) : item.userID === id);
+  return repositories;
 };
 
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
