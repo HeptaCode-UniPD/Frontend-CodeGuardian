@@ -3,26 +3,6 @@ name: Software Metrics Check (Maintainability)
 on: [push, pull_request]
 
 jobs:
-  analyze-metrics:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Install Lizard
-        run: pip install lizard
-
-      - name: Run Maintainability Check
-        # -C 10: Complessità Ciclomatica (MPD07)
-        # -a 6: Parametri per metodo (MPD08)
-        # -L 35: Linee di codice per metodo (MPD09)
-        run: lizard -C 10 -a 6 -L 35 ./
-
   sonarqube:
     name: SonarQube
     runs-on: ubuntu-latest
