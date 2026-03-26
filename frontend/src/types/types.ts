@@ -51,7 +51,9 @@ export interface Repository{
 
     visibility: string,
     name: string,
-    pctTest: number
-    pctDoc: number
-    pctOwasp: number
+    pctTest: number,
+    pctDoc: number,
+    pctOwasp: number,
+
+    reason:string
 }

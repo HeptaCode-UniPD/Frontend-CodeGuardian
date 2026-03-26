@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { getInfoUserByID } from './UserService';
 
 export const saveUserID = (key: string, value: string) => {
   localStorage.setItem(key, value);
@@ -19,12 +20,28 @@ export function isLogged() {
   const userId = getUserID('userID');
 
   useEffect(() => {
-    if (!userId && location.pathname !== '/login') {
-      navigate('/login');
-    }
+    const verifyUser = async () => {
+      if (!userId) {
+        if (location.pathname !== '/login') {
+          navigate('/login');
+        }
+        return;
+      }
 
-    if (userId && location.pathname === '/login') {
-      navigate('/repositories');
-    }
+      const currentUID: string = userId;
+
+      if (location.pathname === '/login') {
+        navigate('/repositories');
+        return;
+      }
+
+      const user = await getInfoUserByID(currentUID);
+      if (!user && location.pathname !== '/profile') {
+        navigate('/profile');
+        return;
+      }
+    };
+
+    verifyUser();
   }, [userId, location.pathname, navigate]);
 }

@@ -20,7 +20,7 @@ export default function Repositories() {
         if (result) {setRepositories(result);}
         setLoading(false); };
 
-      if (id) fetchData();
+      fetchData();
   }, [id]);
 
   if (loading) return <p>Caricamento...</p>;

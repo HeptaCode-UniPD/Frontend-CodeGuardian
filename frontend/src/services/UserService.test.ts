@@ -1,50 +1,36 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import * as UserService from './UserService';
 import * as Mock from '../test/mock';
 
 describe('UserService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-    beforeEach(() => {
-        vi.restoreAllMocks();
-        vi.useFakeTimers();
+  it('getUserById restituisce l\'utente corretto', async () => {
+    const target = Mock.mock_user[0];
+    const result = await UserService.getInfoUserByID(target.id);
+    expect(result).toEqual(target);
+  });
+
+  it('restituisce undefined se l\'utente non esiste', async () => {
+    const result = await UserService.getInfoUserByID("non-esiste");
+    expect(result).toBeUndefined();
+  });
+
+  it('getIDbyEmail restituisce un ID', async () => {
+        const result = await UserService.getIDbyEmail('test@test.com');
+        expect(typeof result).toBe('string');
+        expect(result).toBe('1');
     });
 
-    afterEach(() => {
-        vi.useRealTimers();
-    });
-
-    it('getInfoUserByID restituisce l\'utente corretto', async () => {
-        const targetUser = Mock.mock_user[0];
-        const result = await UserService.getInfoUserByID(targetUser.id);
-        expect(result).toEqual(targetUser);
-    });
-
-    it('getInfoUserByID restituisce undefined se l\'utente non esiste', async () => {
-        const result = await UserService.getInfoUserByID('9999');
-        expect(result).toBeUndefined();
-    });
-
-    // TODO 
-    it('getIDbyEmail restituisce "1"', async () => {
-        const promise = UserService.getIDbyEmail('todo.it');
-        vi.advanceTimersByTime(1000);
-        const result = await promise;
-        expect(result).toBe("1");
-    });
-
-    it('checkEmailValid restituisce sempre true per ora', async () => {
-        const promise = UserService.checkEmailValid('todo.it');
-        vi.advanceTimersByTime(1000);
-        
-        const result = await promise;
+    it('checkEmailValid restituisce true', async () => {
+        const result = await UserService.checkEmailValid('test@test.com');
         expect(result).toBe(true);
     });
 
-    it('checkCredentials restituisce sempre true per ora', async () => {
-        const promise = UserService.checkCredentials('todo.it', 'todo_pw');
-        vi.advanceTimersByTime(1000);
-        
-        const result = await promise;
+    it('checkCredentials restituisce true', async () => {
+        const result = await UserService.checkCredentials('test@test.com', 'password');
         expect(result).toBe(true);
     });
 });

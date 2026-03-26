@@ -1,60 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
-import { checkRepoValid, checkRepoToken, checkRepoAccess} from '../services/RepositoriesService';
+import { checkRepoValid, checkRepoAccess} from '../services/RepositoriesService';
 import { isLogged} from '../services/SessionService';
 
-const ErrorReport = ({loading, url, hasAccess, isValid, tokenError} : { loading: boolean, url: string, hasAccess: boolean, isValid: boolean, tokenError:boolean}) => (
-  <div>
-    {loading && url && <p id="loading"> Verifica informazioni...</p>}
-    { !loading && url && !hasAccess && <p id="hint">Il repository è privato. Inserisci il tuo Personal Access Token per continuare.</p>}
-    {isValid && tokenError && (<p className='error'>Il token inserito non è valido.</p>)}
+const ErrorReport = ({loading, url, hasAccess, isValid} : { loading: boolean, url: string, hasAccess: boolean, isValid: boolean}) => (
+  <div id="state-div">
+    {loading && url && <p id="check-info"> Verifica informazioni...</p>}
+    {!loading && isValid && url && !hasAccess && <p id="hint">Repository privato, impossibile importare.</p>}
   </div>
 );
 
 export default function AddRepository() {
-  isLogged();
-  const navigate = useNavigate();
-  const [url, setUrl] = useState('');
-  const [token, setToken] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isValid, setIsValid] = useState(true);
-  const [hasAccess, setHasAccess] = useState(true);
-  const [tokenError, setTokenError] = useState(false);
+    isLogged();
+    const navigate = useNavigate();
+    const [url, setUrl] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [isValid, setIsValid] = useState(true);
+    const [hasAccess, setHasAccess] = useState(true);
 
-  useEffect(() => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-    const checkDelay = setTimeout(async () => {
-      setLoading(true);
-      setHasAccess(false);
-      try {
-        const result_valid = await checkRepoValid(url);
-        setIsValid(result_valid);
-
-        if (result_valid) {
-          const result_has_access = await checkRepoAccess(url);
-          setHasAccess(result_has_access);
-        }
-
-      } catch (err) {
-        console.error("Errore nel controllo");
-      } finally {
-        setLoading(false);
+    const repo_valid = await checkRepoValid(url);
+    setIsValid(repo_valid);
+    if(repo_valid){
+      const repo_access = await checkRepoAccess(url);
+      if (repo_access) {
+        navigate('/repositories');
+      } else {
+        setHasAccess(false);
       }
-    }, 500);
-    return () => clearTimeout(checkDelay); //reset del timer
-  }, [url]);
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  setTokenError(false);
-
-    const response = await checkRepoToken(url, token);
-
-    if (response) {
-      navigate('/repositories');
-    } else {
-      setTokenError(true);
     }
     setLoading(false);
 };
@@ -66,7 +42,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         <legend>Aggiungi repository</legend>
         <div className="input-group">
           <label htmlFor="url-input">URL repository GitHub</label>
-          <input id="url-input" name="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" className={!isValid ? 'error' : ''}/>
+          <input id="url-input" name="url" value={url} onChange={(e) => {setUrl(e.target.value); setHasAccess(true); setIsValid(true)}} placeholder="URL" className={!isValid ? 'error' : ''}/>
         </div>
 
         {!loading && url && !isValid &&(
@@ -75,18 +51,11 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
         )}
 
-        { !loading && url && !hasAccess &&(
-          <div id="token-section">
-            <label htmlFor="token-input">Inserisci il Personal Token</label>
-            <input id="token-input" value={token} onChange={(e) => setToken(e.target.value)}/>
-          </div>
-        )}
-
-        <ErrorReport loading={loading} url={url} hasAccess={hasAccess} isValid={isValid} tokenError={tokenError}/>
+        <ErrorReport loading={loading} url={url} hasAccess={hasAccess} isValid={isValid}/>
 
         <div id="form-actions">
           <Link to="/repositories" id="annulla">Annulla</Link>
-          <button type="submit" disabled={loading || !isValid || (!hasAccess && !token)}>
+          <button type="submit" disabled={!url || loading || !isValid}>
             Importa
           </button>
         </div>

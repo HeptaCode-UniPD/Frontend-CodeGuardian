@@ -1,15 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as RepositoriesService from './RepositoriesService';
 import * as Mock from '../test/mock';
 
 describe('RepositoriesService', () => {
     beforeEach(() => {
         vi.restoreAllMocks();
-        vi.useFakeTimers();
-    });
-
-    afterEach(() => {
-        vi.useRealTimers();
     });
     
     it('restituisce dei repository dall\'ID dell\'utente', async () => {
@@ -48,25 +43,13 @@ describe('RepositoriesService', () => {
         Mock.mock_repositories.pop();
     });
 
-    // TODO
     it('checkRepoValid restituisce true', async () => {
-        const promise = RepositoriesService.checkRepoValid('http://todo');
-        vi.advanceTimersByTime(1000);
-        const result = await promise;
+        const result = await RepositoriesService.checkRepoValid('http://qualsiasi-url');
         expect(result).toBe(true);
     });
 
-    it('checkRepoAccess restituisce false', async () => {
-        const promise = RepositoriesService.checkRepoAccess('http://todo');
-        vi.advanceTimersByTime(1000);
-        const result = await promise;
-        expect(result).toBe(false);
-    });
-
-    it('checkRepoToken restituisce true con il token', async () => {
-        const promise = RepositoriesService.checkRepoToken('url_todo', 'token_todo');
-        vi.advanceTimersByTime(1000);
-        const result = await promise;
+    it('checkRepoAccess restituisce true', async () => {
+        const result = await RepositoriesService.checkRepoAccess('http://qualsiasi-url');
         expect(result).toBe(true);
     });
 });

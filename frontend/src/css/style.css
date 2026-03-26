@@ -244,6 +244,7 @@ summary:hover{
   margin-right: auto;
 }
 
+#repo-error a,
 #dettagli-repo #delete-repo button,
 #dettagli-repo aside a{
   background-color: var(--interactive-area);
@@ -266,6 +267,7 @@ summary:hover{
   margin-right: 0.5em;
 }
 
+#repo-error a,
 #dettagli-repo aside a[target="_blank"]
 {
   background-color: var(--border);
@@ -280,11 +282,13 @@ summary:hover{
   margin-right: 0.5em;
 }
 
+#repo-error a:hover,
 #dettagli-repo aside a[target="_blank"]:hover
 {
   background-color: transparent;
 }
 
+#repo-error a[data-discover="true"],
 #dettagli-repo aside a[data-discover="true"]
 {
   color: var(--detail-txt);
@@ -296,6 +300,24 @@ summary:hover{
   background-color: var(--border);
   color: var(--txt);
 }
+
+#dettagli-repo #reason{
+  padding-bottom: 1em;
+  border-bottom: 1px solid var(--border);
+}
+
+#repo-error{
+  max-width: 1200px;
+  margin: 2em auto;
+  text-align: center;
+}
+
+#repo-error a[data-discover="true"]{
+  margin-left: 0.5em;
+  color: var(--txt);
+}
+
+
 
 /* --------- NAV --------- */
 
@@ -383,6 +405,10 @@ header nav a:nth-child(2):before{
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.5em;
+}
+
+#user-not-found{
+  text-align: center;
 }
 
 header nav p:nth-child(3):before,
@@ -508,6 +534,7 @@ main #repositories-page aside a{
 
 #add-repository-page form button,
 #add-repository-page form a#annulla,
+#logout,
 #profile-page article button,
 #login-page form button{
   flex:1 1 50%;
@@ -535,11 +562,13 @@ main #repositories-page aside a{
   border-color: transparent;
 }
 
+#add-repository-page button:disabled,
+#add-repository-page button:disabled:hover,
 #login-page form button#login:disabled,
 #login-page form button#reset-button:disabled{
   background-color: var(--disable);
   color: var(--detail-txt);
-  border:transparent;
+  border:2px solid var(--disable);
   cursor: default;
 }
 
@@ -556,6 +585,7 @@ main #repositories-page aside a{
   left: -100%;
 }
 
+#email-not-valid,
 #loading{
   margin-top: 2em;
   margin-bottom: 2em;
@@ -596,17 +626,17 @@ main #repositories-page aside a{
   margin: 3em;
 }
 
-#profile-page article button{
+#logout{
   width: 100%;
   border: 2px solid var(--border);
   background-color: transparent;
 }
 
-#profile-page article button:hover{
+#logout:hover{
   background-color: var(--border);
 }
 
-#profile-page article button::before{
+#logout::before{
   content: url('../assets/sign-out.svg');
   display: inline-block;
   vertical-align: middle;
@@ -616,6 +646,15 @@ main #repositories-page aside a{
 /* ----- ADD REPOSITORY ------ */
 main #add-repository-page{
   border: none;
+}
+
+main #state-div:has(#hint),
+main #state-div:has(#check-info){
+  padding-bottom: 0;
+}
+
+main #state-div{
+  padding-bottom: 2.5em;
 }
 
 #add-repository-page form legend{

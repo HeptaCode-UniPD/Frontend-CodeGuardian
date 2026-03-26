@@ -24,13 +24,18 @@ export default function UserPage() {
         if (id) fetchData();
     }, [id]);
 
-    if (loading) return <p>Caricamento...</p>;
- 
+    const handleLogout = async () => {
+    logout(key);
+    navigate('/login');
+    };
 
-const handleLogout = async () => {
-  logout(key);
-  navigate('/login');
-};
+    if (loading) return <p>Caricamento...</p>;
+    if (!user) return (
+        <div id="profile-page">
+            <p id="user-not-found">Utente non trovato.</p>
+            <button type="button" onClick={handleLogout} id="logout">Esci</button>
+        </div>
+    );
 
   return (
     <div id="profile-page">

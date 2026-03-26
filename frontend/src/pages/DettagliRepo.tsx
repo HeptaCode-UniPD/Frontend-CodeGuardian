@@ -60,12 +60,12 @@ export default function DettagliRepo() {
                 setRemediation(result.remediation);}
             setLoading(false);}
 
-        if (id) fetchData();
+        fetchData();
             
     }, [id]);
 
     if (loading) return <p>Caricamento...</p>;
-    if (!repository) return <div>Analisi del repository selezionato non trovata. <Link to="/Repositories">← Indietro</Link></div>;
+    if (!repository) return <div id="repo-error">Analisi del repository selezionato non trovata. <Link to="/Repositories">← Indietro</Link></div>;
  
     return ( // TODO: i pulsanti dovranno cambiare a seconda se l'repository è avviata o meno
         <div id="dettagli-repo">
@@ -92,6 +92,8 @@ export default function DettagliRepo() {
                 </div>
 
                 <div id="remediation-block">
+                    <h2> Motivazioni dei suggerimenti</h2>
+                    <p id="reason">{repository.reason}</p>
                     <h2>{remediation?.length} file con suggerimento remediation</h2>
                     <ul id="remediation-list">
                         <RemediationSection title="Copertura test" items={gruppi.test ?? []} />

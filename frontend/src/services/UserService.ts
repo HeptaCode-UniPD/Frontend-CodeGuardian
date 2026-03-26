@@ -14,7 +14,7 @@ export async function getIDbyEmail(email: string): Promise<string> {
   return "1";
 }
 
-//temporanea
+//temporanea todo
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export async function checkEmailValid(email: string): Promise<boolean> {

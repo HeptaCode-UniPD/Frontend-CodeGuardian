@@ -60,7 +60,9 @@ export const mock_repositories: Types.Repository[] = [
         name: "CodeGuardian",
         pctTest: 80,
         pctDoc: 90,
-        pctOwasp: 40
+        pctOwasp: 40,
+
+        reason:"non andavano bene"
     },
     {
         id: "2",
@@ -71,7 +73,9 @@ export const mock_repositories: Types.Repository[] = [
         name: "PoC",
         pctTest: 60,
         pctDoc: 79,
-        pctOwasp: 90
+        pctOwasp: 90,
+
+        reason:"non andavano bene"
     },
     {
         id: "3",
@@ -82,7 +86,9 @@ export const mock_repositories: Types.Repository[] = [
         name: "RepoSenzaRemediation",
         pctTest: 0,
         pctDoc: 0,
-        pctOwasp: 0
+        pctOwasp: 0,
+
+        reason:"non andavano bene"
     }
 ];
 

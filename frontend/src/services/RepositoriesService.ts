@@ -35,18 +35,5 @@ export async function checkRepoAccess(url: string): Promise<boolean> {
   // return response.json(); 
 
   await delay(1000);
-  return false;
-}
-
-export async function checkRepoToken(url: string, token: string): Promise<boolean> {
-  // const response = await fetch(`${API_URL}/verify-token`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ repoUrl: url, githubToken: token }),
-  // });
-
-  // return response.json();
-
-  await delay(1000);
   return true;
 }

@@ -1,10 +1,10 @@
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
-import Repositories from '../pages/Repositories';
-import DettagliRepo from '../pages/DettagliRepo';
-import AddRepository from '../pages/AddRepository';
-import UserPage from '../pages/UserPage';
-import Login from '../pages/Login';
-import { NavBar } from '../components/NavBar';
+import Repositories from './pages/Repositories';
+import DettagliRepo from './pages/DettagliRepo';
+import AddRepository from './pages/AddRepository';
+import UserPage from './pages/UserPage';
+import Login from './pages/Login';
+import { NavBar } from './components/NavBar';
 
 const RootLayout = () => (
   <div>

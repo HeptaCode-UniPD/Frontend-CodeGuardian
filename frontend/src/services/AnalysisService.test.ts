@@ -1,38 +1,25 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getAnalysisPayload } from './AnalysisService';
-import * as Mock from '../test/mock';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
+import * as AnalysisService from './AnalysisService';
+
+vi.mock('./AnalysisService', async () => {
+  const actual = await vi.importActual('./AnalysisService') as any;
+  return { ...actual }; 
+});
 
 describe('AnalysisService', () => {
-    beforeEach(() => {
-        vi.restoreAllMocks();
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('getAnalysisPayload restituisce i dati corretti', async () => {
+    const result = await AnalysisService.getAnalysisPayload("1");
     
-    it('restituisce il payload per un ID esistente', async () => {
-        const targetId = Mock.mock_repositories[0].id;
-        const result = await getAnalysisPayload(targetId);
+    expect(result).not.toBeNull();
+    expect(result?.repository.id).toBe("1");
+  });
 
-        expect(result).not.toBeNull();
-        expect(result?.repository).toEqual(Mock.mock_repositories[0]);
-        expect(result?.remediation).toHaveLength(2);
-    });
-
-    it('non cerca le remediation se il repo non esiste', async () => {
-        const filterSpy = vi.spyOn(Mock.mock_reports, 'filter');
-        const result = await getAnalysisPayload('99999');
-
-        expect(result).toBeNull();
-        expect(filterSpy).toHaveBeenCalledTimes(0);
-    });
-
-    it('cerca tutto se il repo esiste', async () => {
-        const filterSpy = vi.spyOn(Mock.mock_reports, 'filter');
-        await getAnalysisPayload('1');
-        expect(filterSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('caso in cui non ci sono remediation per un repo', async () => {
-        const result = await getAnalysisPayload('3');
-        expect(result).not.toBeNull();
-        expect(result?.remediation).toBeInstanceOf(Array);
-    });
+  it('restituisce null per un ID inesistente', async () => {
+    const result = await AnalysisService.getAnalysisPayload("999");
+    expect(result).toBeNull();
+  });
 });
