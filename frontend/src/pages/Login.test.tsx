@@ -66,7 +66,6 @@ describe('Login', () => {
     it('mostra errore se l\'email non è valida', async () => {
         const user = userEvent.setup();
         (sessionService.useIsLogged as any).mockReturnValue(true);
-        (userService.checkEmailValid as any).mockResolvedValue(false);
 
         render(<MemoryRouter><Login /></MemoryRouter>);
 
@@ -85,7 +84,6 @@ describe('Login', () => {
     it('mostra errore se le credenziali sono errate', async () => {
         const user = userEvent.setup();
         (sessionService.useIsLogged as any).mockReturnValue(true);
-        (userService.checkEmailValid as any).mockResolvedValue(true);
         (userService.checkCredentials as any).mockResolvedValue(false);
 
         render(<MemoryRouter><Login /></MemoryRouter>);
@@ -105,9 +103,7 @@ describe('Login', () => {
     it('naviga a /repositories dopo il login con successo', async () => {
         const user = userEvent.setup();
         (sessionService.useIsLogged as any).mockReturnValue(true);
-        (userService.checkEmailValid as any).mockResolvedValue(true);
         (userService.checkCredentials as any).mockResolvedValue(true);
-        (userService.getIDbyEmail as any).mockResolvedValue('1');
         (sessionService.saveUserID as any).mockReturnValue(undefined);
 
         render(

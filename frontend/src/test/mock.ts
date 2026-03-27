@@ -5,30 +5,26 @@ import * as Types from '../types/types';
 // Mock Utente
 export const mock_user: Types.User[] = [
     {
-        id: "1",
+        userId: "1",
         email: "developer@heptacode.it",
-        password: "1234",
         nome: "Mario",
         cognome: "Rossi"
     },
     {
-        id: "2",
+        userId: "2",
         email: "developer2@heptacode.it",
-        password: "1234",
         nome: "Giulia",
         cognome: "Rossi"
     },
     {
-        id: "3",
+        userId: "3",
         email: "developer3@heptacode.it",
-        password: "1234",
         nome: "Anna",
         cognome: "Rossi"
     },
     {
-        id: "4",
+        userId: "4",
         email: "developer4@heptacode.it",
-        password: "1234",
         nome: "Matteo",
         cognome: "Rossi"
     },

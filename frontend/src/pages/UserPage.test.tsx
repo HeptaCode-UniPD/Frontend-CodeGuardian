@@ -73,7 +73,7 @@ describe('UserPage', () => {
         const user = userEvent.setup();
         const target = Mock.mock_user[0];
         (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue(target.id);
+        (sessionService.getUserID as any).mockReturnValue(target.userId);
         (userService.getInfoUserByID as any).mockResolvedValue(target);
         (sessionService.logout as any).mockReturnValue(undefined);
 

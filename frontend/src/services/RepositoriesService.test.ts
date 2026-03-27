@@ -8,7 +8,7 @@ describe('RepositoriesService', () => {
     });
     
     it('restituisce dei repository dall\'ID dell\'utente', async () => {
-        const targetId = Mock.mock_user[0].id;
+        const targetId = Mock.mock_user[0].userId;
         const result = await RepositoriesService.getRepositoriesByUser(targetId);
 
         expect(Array.isArray(result)).toBe(true);
@@ -20,7 +20,7 @@ describe('RepositoriesService', () => {
     });
 
     it('non restituisce repository se non ne ha', async () => {
-        const targetId = Mock.mock_user[3].id;
+        const targetId = Mock.mock_user[3].userId;
         const result = await RepositoriesService.getRepositoriesByUser(targetId);
 
         expect(Array.isArray(result)).toBe(true);
@@ -41,11 +41,6 @@ describe('RepositoriesService', () => {
         const result = await RepositoriesService.getRepositoriesByUser("999");
         expect(result).toContainEqual(newRepo);
         Mock.mock_repositories.pop();
-    });
-
-    it('checkRepoValid restituisce true', async () => {
-        const result = await RepositoriesService.checkRepoValid('http://qualsiasi-url');
-        expect(result).toBe(true);
     });
 
     it('checkRepoAccess restituisce true', async () => {
