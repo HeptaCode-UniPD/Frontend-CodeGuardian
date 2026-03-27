@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import {getInfoUserByID} from '../services/UserService';
 import { type User} from '../types/types';
-import { logout, getUserID, isLogged} from '../services/SessionService';
+import { logout, getUserID, useIsLogged} from '../services/SessionService';
 import { useNavigate } from 'react-router-dom';
 
 export default function UserPage() {
-    isLogged();
+    useIsLogged();
     const navigate = useNavigate();
     const key = 'userID';
     const id = (getUserID(key));
-    const [user, setUserInfo] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
@@ -18,7 +18,7 @@ export default function UserPage() {
         const fetchData = async () => {
             setLoading(true);
             const result = await getInfoUserByID(id);
-            if (result) {setUserInfo(result);}
+            if (result) {setUser(result);}
             setLoading(false);};
 
         if (id) fetchData();

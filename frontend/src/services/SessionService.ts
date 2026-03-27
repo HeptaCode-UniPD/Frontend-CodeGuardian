@@ -14,7 +14,7 @@ export const logout = (key: string) => {
   localStorage.removeItem(key);
 }
 
-export function isLogged() {
+export function useIsLogged() {
   const navigate = useNavigate();
   const location = useLocation();
   const userId = getUserID('userID');
@@ -38,7 +38,6 @@ export function isLogged() {
       const user = await getInfoUserByID(currentUID);
       if (!user && location.pathname !== '/profile') {
         navigate('/profile');
-        return;
       }
     };
 

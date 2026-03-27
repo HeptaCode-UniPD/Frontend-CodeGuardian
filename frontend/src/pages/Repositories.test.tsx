@@ -11,7 +11,7 @@ vi.mock('../services/RepositoriesService', () => ({
 }));
 
 vi.mock('../services/SessionService', () => ({
-    isLogged: vi.fn(),
+    useIsLogged: vi.fn(),
     getUserID: vi.fn(),
 }));
 
@@ -21,7 +21,7 @@ describe('Repositories', () => {
     });
 
     it('mostra il messaggio di caricamento iniziale', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue('1');
         (repositoriesService.getRepositoriesByUser as any).mockReturnValue(new Promise(() => {}));
 
@@ -36,7 +36,7 @@ describe('Repositories', () => {
         const userRepos = Mock.mock_repositories.filter(r => 
         Array.isArray(r.userID) ? r.userID.includes('1') : r.userID === '1'
         );
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue('1');
         (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(userRepos);
 
@@ -51,7 +51,7 @@ describe('Repositories', () => {
     });
 
     it('mostra il messaggio di errore se il fetch restituisce null', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue('1');
         (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(null);
 
@@ -63,7 +63,7 @@ describe('Repositories', () => {
     });
 
     it('mostra lista vuota se l\'utente non ha repository', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue('4');
         (repositoriesService.getRepositoriesByUser as any).mockResolvedValue([]);
 
@@ -77,7 +77,7 @@ describe('Repositories', () => {
     });
 
     it('non esegue il fetch se getUserID non restituisce un id', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue(null);
 
         await act(async () => {
@@ -89,7 +89,7 @@ describe('Repositories', () => {
 
     it('i link ai repository puntano al percorso corretto', async () => {
         const userRepos = [Mock.mock_repositories[0]];
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue('1');
         (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(userRepos);
 

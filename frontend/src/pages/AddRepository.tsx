@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import { checkRepoValid, checkRepoAccess} from '../services/RepositoriesService';
-import { isLogged} from '../services/SessionService';
+import { useIsLogged} from '../services/SessionService';
 
 const ErrorReport = ({loading, url, hasAccess, isValid} : { loading: boolean, url: string, hasAccess: boolean, isValid: boolean}) => (
   <div id="state-div">
@@ -11,7 +11,7 @@ const ErrorReport = ({loading, url, hasAccess, isValid} : { loading: boolean, ur
 );
 
 export default function AddRepository() {
-    isLogged();
+    useIsLogged();
     const navigate = useNavigate();
     const [url, setUrl] = useState('');
     const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export default function AddRepository() {
         <legend>Aggiungi repository</legend>
         <div className="input-group">
           <label htmlFor="url-input">URL repository GitHub</label>
-          <input id="url-input" name="url" value={url} onChange={(e) => {setUrl(e.target.value); setHasAccess(true); setIsValid(true)}} placeholder="URL" className={!isValid ? 'error' : ''}/>
+          <input id="url-input" name="url" value={url} onChange={(e) => {setUrl(e.target.value); setHasAccess(true); setIsValid(true)}} placeholder="URL"/>
         </div>
 
         {!loading && url && !isValid &&(

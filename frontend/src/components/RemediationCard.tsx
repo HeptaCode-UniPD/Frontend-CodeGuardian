@@ -27,7 +27,7 @@ const DiffBlock = ({ part }: { part: Diff.Change }) => {
   const lines = part.value.split('\n').filter(line => line.trim() !== '');
 
   const renderedLines = lines.map((line, i) => (
-    <div key={i}>{prefix}{line}</div>
+    <div key={line}>{prefix}{line}</div>
   ));
 
   return <div className={className}>{renderedLines}</div>;

@@ -14,7 +14,7 @@ vi.mock('../services/UserService', () => ({
 }));
 
 vi.mock('../services/SessionService', () => ({
-  isLogged: vi.fn(),
+  useIsLogged: vi.fn(),
   saveUserID: vi.fn(),
 }));
 
@@ -32,7 +32,7 @@ describe('Login', () => {
     const passwordInput = () => document.getElementById('password-input') as HTMLInputElement;
 
     it('renderizza il form', () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
 
         render(<MemoryRouter><Login /></MemoryRouter>);
 
@@ -43,7 +43,7 @@ describe('Login', () => {
     });
 
     it('il bottone Accedi è disabilitato se email o password sono vuote', () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
 
         render(<MemoryRouter><Login /></MemoryRouter>);
 
@@ -52,7 +52,7 @@ describe('Login', () => {
 
     it('mostra/nasconde la password al click sull\'icona', async () => {
         const user = userEvent.setup();
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
 
         render(<MemoryRouter><Login /></MemoryRouter>);
 
@@ -65,7 +65,7 @@ describe('Login', () => {
 
     it('mostra errore se l\'email non è valida', async () => {
         const user = userEvent.setup();
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (userService.checkEmailValid as any).mockResolvedValue(false);
 
         render(<MemoryRouter><Login /></MemoryRouter>);
@@ -84,7 +84,7 @@ describe('Login', () => {
 
     it('mostra errore se le credenziali sono errate', async () => {
         const user = userEvent.setup();
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (userService.checkEmailValid as any).mockResolvedValue(true);
         (userService.checkCredentials as any).mockResolvedValue(false);
 
@@ -104,7 +104,7 @@ describe('Login', () => {
 
     it('naviga a /repositories dopo il login con successo', async () => {
         const user = userEvent.setup();
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (userService.checkEmailValid as any).mockResolvedValue(true);
         (userService.checkCredentials as any).mockResolvedValue(true);
         (userService.getIDbyEmail as any).mockResolvedValue('1');
@@ -132,7 +132,7 @@ describe('Login', () => {
 
     it('il bottone Annulla svuota i campi', async () => {
         const user = userEvent.setup();
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
 
         render(<MemoryRouter><Login /></MemoryRouter>);
 
@@ -147,7 +147,7 @@ describe('Login', () => {
 
     it('reindirizza al login se l\'utente non è loggato', async () => {
         vi.stubGlobal('location', { ...window.location, href: '' });
-        (sessionService.isLogged as any).mockImplementation(() => {
+        (sessionService.useIsLogged as any).mockImplementation(() => {
         window.location.href = '/login';
         });
 

@@ -40,7 +40,7 @@ describe('SessionService', () => {
   it('reindirizza a /login se l\'utente non è loggato e non è in /login', async () => {
     (useLocation as any).mockReturnValue({ pathname: '/repositories' });
     await act(async () => {
-      renderHook(() => SessionService.isLogged());
+      renderHook(() => SessionService.useIsLogged());
     });
     expect(mockNavigate).toHaveBeenCalledWith('/login');
   });
@@ -48,7 +48,7 @@ describe('SessionService', () => {
   it('non reindirizza se l\'utente non è loggato ed è già in /login', async () => {
     (useLocation as any).mockReturnValue({ pathname: '/login' });
     await act(async () => {
-      renderHook(() => SessionService.isLogged());
+      renderHook(() => SessionService.useIsLogged());
     });
     expect(mockNavigate).not.toHaveBeenCalled();
   });
@@ -57,7 +57,7 @@ describe('SessionService', () => {
     localStorage.setItem('userID', '123');
     (useLocation as any).mockReturnValue({ pathname: '/login' });
     await act(async () => {
-      renderHook(() => SessionService.isLogged());
+      renderHook(() => SessionService.useIsLogged());
     });
     expect(mockNavigate).toHaveBeenCalledWith('/repositories');
   });
@@ -66,7 +66,7 @@ describe('SessionService', () => {
     localStorage.setItem('userID', '123');
     (useLocation as any).mockReturnValue({ pathname: '/repositories' });
     await act(async () => {
-      renderHook(() => SessionService.isLogged());
+      renderHook(() => SessionService.useIsLogged());
     });
     expect(mockNavigate).not.toHaveBeenCalled();
   });
@@ -76,7 +76,7 @@ describe('SessionService', () => {
     (useLocation as any).mockReturnValue({ pathname: '/repositories' });
     (UserService.getInfoUserByID as any).mockResolvedValue(undefined);
     await act(async () => {
-      renderHook(() => SessionService.isLogged());
+      renderHook(() => SessionService.useIsLogged());
     });
     expect(mockNavigate).toHaveBeenCalledWith('/profile');
   });
@@ -86,7 +86,7 @@ describe('SessionService', () => {
     (useLocation as any).mockReturnValue({ pathname: '/profile' });
     (UserService.getInfoUserByID as any).mockResolvedValue(undefined);
     await act(async () => {
-      renderHook(() => SessionService.isLogged());
+      renderHook(() => SessionService.useIsLogged());
     });
     expect(mockNavigate).not.toHaveBeenCalled();
   });

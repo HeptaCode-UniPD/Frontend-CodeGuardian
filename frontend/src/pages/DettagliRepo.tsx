@@ -4,7 +4,7 @@ import { getAnalysisPayload} from '../services/AnalysisService';
 import { RemediationCard} from '../components/RemediationCard';
 import { CircularProgress} from '../components/CircularProgress';
 import { useParams, Link} from 'react-router-dom';
-import { isLogged } from '../services/SessionService';
+import { useIsLogged } from '../services/SessionService';
 
 interface GruppiRemediation {
   test?: AnalysisReport[];
@@ -37,9 +37,9 @@ const InfoRepo = ({repository}:{repository: Repository}) => (
 );
 
 export default function DettagliRepo() {
-    isLogged();
+    useIsLogged();
     const { id } = useParams<{ id: string }>(); //recupero l'id dall'URL per capire che repo sto guardando
-    const [repository, setAnalisi] = useState<Repository | null>(null); // useState : crea una variabile di stato, quando viene cambiata, React se ne accorge e ridisegna il componente
+    const [repository, setRepository] = useState<Repository | null>(null); // useState : crea una variabile di stato, quando viene cambiata, React se ne accorge e ridisegna il componente
     const [remediation, setRemediation] = useState<AnalysisReport[] | null>([]);
     const [loading, setLoading] = useState(true);
 
@@ -56,7 +56,7 @@ export default function DettagliRepo() {
             setLoading(true);
             const result = await getAnalysisPayload(id);
             if (result) {
-                setAnalisi(result.repository);
+                setRepository(result.repository);
                 setRemediation(result.remediation);}
             setLoading(false);}
 

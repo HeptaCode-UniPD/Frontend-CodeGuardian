@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getRepositoriesByUser} from '../services/RepositoriesService';
-import { isLogged, getUserID} from '../services/SessionService';
+import { useIsLogged, getUserID} from '../services/SessionService';
 import { type Repository} from '../types/types';
 
 export default function Repositories() {
-  isLogged();
+  useIsLogged();
   const key = 'userID';
   const id = (getUserID(key));
   const [loading, setLoading] = useState(true);

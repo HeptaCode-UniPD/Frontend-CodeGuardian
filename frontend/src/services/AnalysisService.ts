@@ -5,9 +5,7 @@ import * as Mock from '../test/mock';
 export async function getAnalysisPayload (id: string) {
     const dataAnalisi = await getAnalysisById(id);
     if (!dataAnalisi) return null;
-    const [dataRemediation] = await Promise.all([
-        getRemediationByRepoId(id),
-    ]);
+    const dataRemediation = await getRemediationByRepoId(id);
 
     return {
         repository: dataAnalisi,

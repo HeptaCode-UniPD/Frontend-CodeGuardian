@@ -4,13 +4,13 @@ const Breadcrumbs = () => {
   const matches = useMatches();
 
   const crumbs = matches
-    .filter((match) => Boolean(match.handle && (match.handle as any).label))
+    .filter((match) => Boolean(match.handle && (match.handle as { label: string }).label))
     .map((match) => {
       return {
-        label: (match.handle as any).label,
+        label: (match.handle as { label: string }).label,
         path: match.pathname,
       };
-    });
+  });
 
   return (
     <h2 id="breadcrumb">

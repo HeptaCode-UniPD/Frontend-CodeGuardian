@@ -469,7 +469,6 @@ main #repositories-page aside a{
   content: url('../assets/login.svg');
   display: inline-block;
   vertical-align: middle;
-  margin-right: 0.5em;
   margin: 3em;
   flex: 1 1 50%;
 }
@@ -522,7 +521,7 @@ main #repositories-page aside a{
   padding: 0.3em 1em;
 }
 
-#add-repository-page form input,
+#add-repository-page form input:focus,
 #login-page form input:focus{
   outline: 2px solid var(--detail-txt);
 }
@@ -551,7 +550,6 @@ main #repositories-page aside a{
 
 #login-page form button#login{
   background-color: var(--bgcolor);
-  border:none;
   color:var(--txt);
   border: 2px solid transparent;
 }
@@ -622,7 +620,6 @@ main #repositories-page aside a{
   content: url('../assets/avatar.svg');
   display: inline-block;
   vertical-align: middle;
-  margin-right: 0.5em;
   margin: 3em;
 }
 

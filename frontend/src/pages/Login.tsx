@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import {checkEmailValid, checkCredentials, getIDbyEmail} from '../services/UserService';
-import { saveUserID, isLogged} from '../services/SessionService';
+import { saveUserID, useIsLogged} from '../services/SessionService';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Login() {
-    isLogged();
+    useIsLogged();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -44,7 +44,6 @@ const handleLogin = async (e: React.FormEvent) => {
 const handleAnnulla = async () => {
     setEmail('');
     setPassword('');
-    return
 };
 
   return (
@@ -55,7 +54,7 @@ const handleAnnulla = async () => {
             <legend aria-hidden="true">Accedi</legend>
             <div>
                 <label htmlFor="email-input">Email: </label>
-                <input id="email-input" name="email" value={email} onChange={(e) => {setEmail(e.target.value); setCredentialCorrect(true); setEmailValid(true);}} placeholder="Email" className={!isEmailValid ? 'error' : ''}/>
+                <input id="email-input" name="email" value={email} onChange={(e) => {setEmail(e.target.value); setCredentialCorrect(true); setEmailValid(true);}} placeholder="Email"/>
             </div>
             <div>
                 <label htmlFor="password-input">Password: </label>

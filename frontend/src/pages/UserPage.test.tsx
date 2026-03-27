@@ -12,7 +12,7 @@ vi.mock('../services/UserService', () => ({
 }));
 
 vi.mock('../services/SessionService', () => ({
-  isLogged: vi.fn(),
+  useIsLogged: vi.fn(),
   getUserID: vi.fn(),
   logout: vi.fn(),
 }));
@@ -28,7 +28,7 @@ describe('UserPage', () => {
     });
 
     it('mostra il messaggio di caricamento iniziale', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue('1');
         (userService.getInfoUserByID as any).mockReturnValue(new Promise(() => {}));
 
@@ -41,7 +41,7 @@ describe('UserPage', () => {
 
     it('mostra i dati utente dopo il caricamento', async () => {
         const target = Mock.mock_user[0];
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue(target.id);
         (userService.getInfoUserByID as any).mockResolvedValue(target);
 
@@ -59,7 +59,7 @@ describe('UserPage', () => {
     });
 
     it('non esegue il fetch se getUserID non restituisce un id', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue(null);
 
         await act(async () => {
@@ -72,7 +72,7 @@ describe('UserPage', () => {
     it('naviga a /login dopo il logout', async () => {
         const user = userEvent.setup();
         const target = Mock.mock_user[0];
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue(target.id);
         (userService.getInfoUserByID as any).mockResolvedValue(target);
         (sessionService.logout as any).mockReturnValue(undefined);
@@ -98,7 +98,7 @@ describe('UserPage', () => {
     });
 
     it('mostra errore se i dati utente non vengono trovati', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (sessionService.getUserID as any).mockReturnValue('999');
         (userService.getInfoUserByID as any).mockResolvedValue(undefined);
 

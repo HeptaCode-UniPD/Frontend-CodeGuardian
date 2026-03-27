@@ -12,7 +12,7 @@ vi.mock('../services/RepositoriesService', () => ({
 }));
 
 vi.mock('../services/SessionService', () => ({
-  isLogged: vi.fn(),
+  useIsLogged: vi.fn(),
 }));
 
 describe('AddRepository (Versione Mock Estremo)', () => {
@@ -26,7 +26,7 @@ describe('AddRepository (Versione Mock Estremo)', () => {
     };
 
     it('mostra errore se l\'URL non è valido dopo il submit', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (repoService.checkRepoValid as any).mockResolvedValue(false);
 
         render(<MemoryRouter><AddRepository /></MemoryRouter>);
@@ -43,7 +43,7 @@ describe('AddRepository (Versione Mock Estremo)', () => {
 
     it('va a repositories quando il link immesso è valido e pubblico', async () => {
         const user = userEvent.setup();
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (repoService.checkRepoValid as any).mockResolvedValue(true);
         (repoService.checkRepoAccess as any).mockResolvedValue(true);
 
@@ -62,7 +62,7 @@ describe('AddRepository (Versione Mock Estremo)', () => {
     });
 
     it('mostra errore se la repository è privata', async () => {
-        (sessionService.isLogged as any).mockReturnValue(true);
+        (sessionService.useIsLogged as any).mockReturnValue(true);
         (repoService.checkRepoValid as any).mockResolvedValue(true);
         (repoService.checkRepoAccess as any).mockResolvedValue(false);
 

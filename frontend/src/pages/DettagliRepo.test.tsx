@@ -11,7 +11,7 @@ vi.mock('../services/AnalysisService', () => ({
 }));
 
 vi.mock('../services/SessionService', () => ({
-  isLogged: vi.fn(),
+  useIsLogged: vi.fn(),
 }));
 
 vi.mock('react-router-dom', async () => {
@@ -28,7 +28,7 @@ describe('DettagliRepo', () => {
     const targetRepo = Mock.mock_repositories[0];
     const targetRemediations = Mock.mock_reports.filter(r => r.repositoryID === targetRepo.id);
 
-    (sessionService.isLogged as any).mockReturnValue(true);
+    (sessionService.useIsLogged as any).mockReturnValue(true);
     (useParams as any).mockReturnValue({ id: targetRepo.id });
     (analysisService.getAnalysisPayload as any).mockResolvedValue({
       repository: targetRepo,
@@ -48,7 +48,7 @@ describe('DettagliRepo', () => {
   });
 
   it('mostra il messaggio di caricamento', async () => {
-    (sessionService.isLogged as any).mockReturnValue(true);
+    (sessionService.useIsLogged as any).mockReturnValue(true);
     (useParams as any).mockReturnValue({ id: '1' });
     
     (analysisService.getAnalysisPayload as any).mockReturnValue(new Promise(() => {}));
@@ -61,7 +61,7 @@ describe('DettagliRepo', () => {
   });
 
   it('mostra errore se il repository non viene trovato', async () => {
-    (sessionService.isLogged as any).mockReturnValue(true);
+    (sessionService.useIsLogged as any).mockReturnValue(true);
     (useParams as any).mockReturnValue({ id: '999' });
     (analysisService.getAnalysisPayload as any).mockResolvedValue(null);
 
@@ -75,7 +75,7 @@ describe('DettagliRepo', () => {
   });
 
   it('non esegue il fetch se l\'ID non è presente nell\'URL', async () => {
-    (sessionService.isLogged as any).mockReturnValue(true);
+    (sessionService.useIsLogged as any).mockReturnValue(true);
     (useParams as any).mockReturnValue({});
     
     await act(async () => {
@@ -86,7 +86,7 @@ describe('DettagliRepo', () => {
   });
 
   it('gestisce il caso in cui remediation sia null', async () => {
-    (sessionService.isLogged as any).mockReturnValue(true);
+    (sessionService.useIsLogged as any).mockReturnValue(true);
     (useParams as any).mockReturnValue({ id: '1' });
     (analysisService.getAnalysisPayload as any).mockResolvedValue({
       repository: Mock.mock_repositories[0],
