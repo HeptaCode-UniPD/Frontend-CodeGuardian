@@ -1,9 +1,9 @@
 // info utente
 export interface User{
     userId: string,
-    email: string,
     nome: string,
     cognome: string,
+    email: string,
 }
 
 // stato dell'analisi
@@ -47,12 +47,10 @@ export interface Repository{
     id: string,
     userID: string[], //un repository può essere aggiunto da più persone
     url: string,
-
-    visibility: string,
     name: string,
-    pctTest: number,
-    pctDoc: number,
-    pctOwasp: number,
+    // pctTest: number,
+    // pctDoc: number,
+    // pctOwasp: number,
 
-    reason:string
+    // reason:string
 }

@@ -13,6 +13,7 @@
   --txt : #f2f2f2;
   --button: #3B8640;
   --border: #3D444D;
+  --insert-url: #2d3743;
   --disable: #32363a;
   --interactive-area: #262C36;
   --bgcolor: #212830;
@@ -228,22 +229,6 @@ summary:hover{
   margin: auto 0;
 }
 
-#repositories-page ul li .visibility{
-  margin-left: 2em; 
-}
-
-#repositories-page ul li .visibility,
-#dettagli-repo #visibility{
-  margin-top: auto;
-  border: solid 1px var(--border);
-  border-radius: 5em;
-  padding: 0 1em;
-  font-style: italic;
-  color: var(--detail-txt);
-  font-weight: 400;
-  margin-right: auto;
-}
-
 #repo-error a,
 #dettagli-repo #delete-repo button,
 #dettagli-repo aside a{
@@ -385,8 +370,8 @@ header nav a:hover{
   background-color: var(--interactive-area);
 }
 
-header nav p:nth-child(3),
-header nav a:nth-child(3){
+header nav p.profile,
+header nav a.profile{
   border-radius: 50%;
   padding: 0.5em 0.6em;
 }
@@ -661,7 +646,7 @@ main #state-div{
 }
 
 #add-repository-page form input{
-  background-color: var(--interactive-area);
+  background-color: var(--insert-url);
 }
 
 #add-repository-page form #form-actions{

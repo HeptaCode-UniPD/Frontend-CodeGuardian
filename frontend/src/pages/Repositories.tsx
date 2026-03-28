@@ -36,7 +36,6 @@ export default function Repositories() {
             <li key={item.id}>
             <Link to={`/repository/${item.id}`}>
             <span>{item.name}</span>
-            <span className="visibility">{item.visibility}</span>
             </Link>
             </li>
           ))}

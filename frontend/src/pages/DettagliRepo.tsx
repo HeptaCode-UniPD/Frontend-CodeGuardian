@@ -27,7 +27,6 @@ const RemediationSection = ({ title, items }: { title: string, items: AnalysisRe
 const InfoRepo = ({repository}:{repository: Repository}) => (
     <aside>
         <h1>{repository.name}</h1>
-        <p id="visibility">{repository.visibility}</p>
         <form id="delete-repo">
             <button>Elimina repository</button>
         </form>
@@ -65,9 +64,9 @@ export default function DettagliRepo() {
     }, [id]);
 
     if (loading) return <p>Caricamento...</p>;
-    if (!repository) return <div id="repo-error">Analisi del repository selezionato non trovata. <Link to="/Repositories">← Indietro</Link></div>;
+    if (!repository) return <div id="repo-error">Analisi del repository selezionato non trovata. <Link to="/repositories">← Indietro</Link></div>;
  
-    return ( // TODO: i pulsanti dovranno cambiare a seconda se l'repository è avviata o meno
+    return (
         <div id="dettagli-repo">
 
             <InfoRepo repository={repository}/>
@@ -78,13 +77,13 @@ export default function DettagliRepo() {
                         <h2>Analisi</h2>
                         <ul id="report-percentage">
                             <li>
-                                <CircularProgress percentage={repository.pctTest} label="Copertura Test"/>
+                                {/* <CircularProgress percentage={repository.pctTest} label="Copertura Test"/> */}
                             </li>
                             <li>
-                                <CircularProgress percentage={repository.pctDoc} label="Completezza Documentazione"/>
+                                {/* <CircularProgress percentage={repository.pctDoc} label="Completezza Documentazione"/> */}
                             </li>
                             <li>
-                                <CircularProgress percentage={repository.pctOwasp} label="Correttezza OWASP"/>
+                                {/* <CircularProgress percentage={repository.pctOwasp} label="Correttezza OWASP"/> */}
                             </li>
                         </ul>
                         <form><button id="start-all">Avvia analisi</button></form>
@@ -93,7 +92,7 @@ export default function DettagliRepo() {
 
                 <div id="remediation-block">
                     <h2> Motivazioni dei suggerimenti</h2>
-                    <p id="reason">{repository.reason}</p>
+                    {/* <p id="reason">{repository.reason}</p> */}
                     <h2>{remediation?.length} file con suggerimento remediation</h2>
                     <ul id="remediation-list">
                         <RemediationSection title="Copertura test" items={gruppi.test ?? []} />

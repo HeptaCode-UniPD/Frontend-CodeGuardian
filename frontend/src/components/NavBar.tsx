@@ -33,10 +33,11 @@ const Breadcrumbs = () => {
 const SmartNavLink = ({ to, page}: { to: string, page: string }) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
+  const classe = to==="/profile"? "profile" : "other-link";
 
   return isActive ? 
-    <p id="inactive-link">{page}</p> : 
-    <NavLink to={to} className="active-link">{page}</NavLink>;
+    <p id="inactive-link" className={classe}>{page}</p> : 
+    <NavLink to={to} className={classe}>{page}</NavLink>;
 };
 
 export const NavBar = () =>(
