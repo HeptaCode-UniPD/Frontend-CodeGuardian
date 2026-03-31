@@ -44,9 +44,11 @@ describe('AddRepository (Versione Mock Estremo)', () => {
         });
     });
 
-    it('mostra errore se la repository è privata', async () => {
+    it('mostra errore se il repository è privato o l\'URL è invalido (400)', async () => {
         (sessionService.useIsLogged as any).mockReturnValue(true);
-        (repoService.checkRepoAccess as any).mockResolvedValue(false);
+        
+        const apiError = new Error("Repository privato o URL invalido.");
+        (repoService.checkRepoAccess as any).mockRejectedValue(apiError);
 
         render(<MemoryRouter><AddRepository /></MemoryRouter>);
 
@@ -55,9 +57,26 @@ describe('AddRepository (Versione Mock Estremo)', () => {
         });
         
         fireEvent.click(screen.getByRole('button', { name: /Importa/i }));
+        await waitFor(() => {
+            expect(screen.getByText(/Repository privato o URL invalido./i)).toBeInTheDocument();
+        });
+    });
+
+    it('mostra errore specifico se il repository è già presente (409)', async () => {
+        (sessionService.useIsLogged as any).mockReturnValue(true);
+        const conflictError = new Error("Repository già presente per questo utente.");
+        (repoService.checkRepoAccess as any).mockRejectedValue(conflictError);
+
+        render(<MemoryRouter><AddRepository /></MemoryRouter>);
+
+        fireEvent.change(screen.getByLabelText(/URL repository GitHub/i), { 
+            target: { value: 'https://github.com/already/exists' } 
+        });
+        
+        fireEvent.click(screen.getByRole('button', { name: /Importa/i }));
 
         await waitFor(() => {
-        expect(screen.getByText(/Repository privato o URL invalido./i)).toBeInTheDocument();
+            expect(screen.getByText(/Repository già presente per questo utente./i)).toBeInTheDocument();
         });
     });
 });

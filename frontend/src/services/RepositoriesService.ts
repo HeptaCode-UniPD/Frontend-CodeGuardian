@@ -44,7 +44,18 @@ export async function checkRepoAccess(url: string): Promise<boolean> {
     });
 
   if (!res.ok) {
-    throw new Error("URL non valido");
+    let errorMessage = "Errore sconosciuto";
+    let statusCode = res.status;
+
+    try {
+      const errorData = await res.json();
+      errorMessage = errorData.message || errorMessage;
+    } catch (e) {
+      errorMessage = res.statusText;
+    }
+    const error: any = new Error(errorMessage);
+    error.status = statusCode;
+    throw error;
   }
 
   return true;
