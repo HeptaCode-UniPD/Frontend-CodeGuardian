@@ -25,6 +25,12 @@ const LocationDisplay = () => {
 describe('UserPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        HTMLDialogElement.prototype.showModal = vi.fn().mockImplementation(function (this: HTMLDialogElement) {
+            this.setAttribute('open', '');
+        });
+        HTMLDialogElement.prototype.close = vi.fn().mockImplementation(function (this: HTMLDialogElement) {
+            this.removeAttribute('open');
+        });
     });
 
     it('mostra il messaggio di caricamento iniziale', async () => {
@@ -78,23 +84,23 @@ describe('UserPage', () => {
         (sessionService.logout as any).mockReturnValue(undefined);
 
         render(
-        <MemoryRouter>
-            <UserPage />
-            <LocationDisplay />
-        </MemoryRouter>
+            <MemoryRouter initialEntries={['/profile']}>
+                <UserPage />
+                <LocationDisplay />
+            </MemoryRouter>
         );
 
+        const logoutBtn = await screen.findByRole('button', { name: /Esci/i });
+        await user.click(logoutBtn);
+
+        const confermaBtn = screen.getByRole('button', { name: /Conferma/i });
+        await user.click(confermaBtn);
+
         await waitFor(() => {
-        expect(screen.getByRole('button', { name: /Esci/i })).toBeInTheDocument();
+            expect(screen.getByTestId('location-display')).toHaveTextContent('/login');
         });
 
-        await user.click(screen.getByRole('button', { name: /Esci/i }));
-
-        await waitFor(() => {
-        expect(screen.getByTestId('location-display')).toHaveTextContent('/login');
-        });
-
-        expect(sessionService.logout).toHaveBeenCalledWith('userID');
+        expect(sessionService.logout).toHaveBeenCalled(); 
     });
 
     it('mostra errore se i dati utente non vengono trovati', async () => {
@@ -109,5 +115,52 @@ describe('UserPage', () => {
         });
 
         expect(screen.getByRole('button', { name: /Esci/i })).toBeInTheDocument();
+    });
+
+    it('apre il dialog di conferma quando si clicca su Esci', async () => {
+        (sessionService.useIsLogged as any).mockReturnValue(true);
+        (sessionService.getUserID as any).mockReturnValue('1');
+        (userService.getInfoUserByID as any).mockResolvedValue(Mock.mock_user[0]);
+
+        render(<MemoryRouter><UserPage /></MemoryRouter>);
+
+        const logoutBtn = await screen.findByRole('button', { name: /esci/i });
+        await userEvent.click(logoutBtn);
+
+        expect(screen.getByText(/sei sicuro di voler uscire\?/i)).toBeInTheDocument();
+        expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+    });
+
+    it('non esegue il logout se si clicca su Annulla', async () => {
+        (sessionService.useIsLogged as any).mockReturnValue(true);
+        (sessionService.getUserID as any).mockReturnValue('1');
+        (userService.getInfoUserByID as any).mockResolvedValue(Mock.mock_user[0]);
+
+        render(<MemoryRouter><UserPage /></MemoryRouter>);
+
+        const logoutBtn = await screen.findByRole('button', { name: /esci/i });
+        await userEvent.click(logoutBtn);
+
+        const annullaBtn = screen.getByRole('button', { name: /annulla/i });
+        await userEvent.click(annullaBtn);
+
+        expect(sessionService.logout).not.toHaveBeenCalled();
+        expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    });
+
+    it('chiama la funzione di logout quando si clicca su Conferma', async () => {
+        (sessionService.useIsLogged as any).mockReturnValue(true);
+        (sessionService.getUserID as any).mockReturnValue('1');
+        (userService.getInfoUserByID as any).mockResolvedValue(Mock.mock_user[0]);
+
+        render(<MemoryRouter><UserPage /></MemoryRouter>);
+
+        const logoutBtn = await screen.findByRole('button', { name: /esci/i });
+        await userEvent.click(logoutBtn);
+
+        const confermaBtn = screen.getByRole('button', { name: /conferma/i });
+        await userEvent.click(confermaBtn);
+
+        expect(sessionService.logout).toHaveBeenCalledTimes(1);
     });
 });

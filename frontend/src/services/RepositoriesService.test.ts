@@ -2,6 +2,11 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import * as RepositoriesService from './RepositoriesService';
 import * as Mock from '../test/mock';
 
+vi.mock('./SessionService', () => ({
+    getUserID: vi.fn().mockReturnValue('1'),
+    useIsLogged: vi.fn(),
+}));
+
 describe('RepositoriesService', () => {
     afterEach(() => {
         vi.unstubAllGlobals();
@@ -86,5 +91,30 @@ describe('RepositoriesService', () => {
         await expect(RepositoriesService.checkRepoAccess('http://url-non-valida'))
             .rejects
             .toThrow("URL non valido");
+    });
+
+
+    it('deleteRepo restituisce true se l\'eliminazione va a buon fine', async () => {
+        vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }));
+
+        const result = await RepositoriesService.deleteRepo('id-repo', 'id-utente');
+
+        expect(fetch).toHaveBeenCalledWith(
+            "http://localhost:3000/repo",
+            expect.objectContaining({
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idUtente: 'id-utente', idRepo: 'id-repo' }),
+            })
+        );
+        expect(result).toBe(true);
+    });
+
+    it('deleteRepo lancia errore se il repository non viene trovato', async () => {
+        vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
+
+        await expect(RepositoriesService.deleteRepo('id-repo', 'id-utente'))
+            .rejects
+            .toThrow("Repository non trovato con idRepo: id-repo e idUtente: id-utente");
     });
 });

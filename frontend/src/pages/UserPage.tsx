@@ -3,6 +3,7 @@ import {getInfoUserByID} from '../services/UserService';
 import { type User} from '../types/types';
 import { logout, getUserID, useIsLogged} from '../services/SessionService';
 import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
 
 export default function UserPage() {
     useIsLogged();
@@ -11,17 +12,32 @@ export default function UserPage() {
     const id = (getUserID(key));
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const dialogRef = useRef<HTMLDialogElement>(null);
+
+    const openLogoutDialog = () => {
+        dialogRef.current?.showModal();
+    };
+
+    const confirmLogout = () => {
+        dialogRef.current?.close();
+        handleLogout();
+    };
     
     useEffect(() => {
-        if(!id) return
+        if (!id) return;
 
         const fetchData = async () => {
-            setLoading(true);
-            const result = await getInfoUserByID(id);
-            if (result) {setUser(result);}
-            setLoading(false);};
-
-        if (id) fetchData();
+            try {
+                setLoading(true);
+                const result = await getInfoUserByID(id);
+                setUser(result??null);
+            } catch (error) {
+                console.error("Errore nel recupero profilo:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, [id]);
 
     const handleLogout = async () => {
@@ -53,11 +69,16 @@ export default function UserPage() {
                     <dt>Email: </dt>
                     <dd>{user?.email}</dd>
                 </dl>
-                <button type="button" onClick={handleLogout} id="logout">
-                    Esci
-                </button>
+                <button type="button" onClick={openLogoutDialog} id="logout"> Esci </button>
             </div>
         </article>
+        <dialog ref={dialogRef}>
+            <p>Sei sicuro di voler uscire?</p>
+            <div>
+                <button onClick={confirmLogout}>Conferma</button>
+                <button onClick={() => dialogRef.current?.close()}>Annulla</button>
+            </div>
+        </dialog>
     </div>
   );
 }

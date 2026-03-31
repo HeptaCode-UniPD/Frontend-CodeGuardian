@@ -18,8 +18,10 @@
   --interactive-area: #262C36;
   --bgcolor: #212830;
   --nav-bg: #151B23;
+  --dialog: #0d1116;
   --added-code: #516525;
   --removed-code: #791313;
+  --cancell: #ad0d0d;
   --detail-txt: #9198A1;
   --visited-link: #478be6;
 }
@@ -136,6 +138,28 @@ summary:hover{
   flex-direction: column;
   flex-grow: 1;
   margin: 0;
+}
+
+#repositories-page button.delete-button:before
+{
+  content: url('../assets/trash.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+  margin: auto;
+}
+
+#repositories-page button.delete-button{
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.5em;
+  padding:0 0.5em;
+  padding: 0.2em 0.5em;
+  transition: 0.3s;
+}
+
+#repositories-page button.delete-button:hover{
+  border: 1px solid var(--detail-txt);
 }
 
 #repositories-page aside a,
@@ -691,4 +715,42 @@ main #state-div{
   background-color: color-mix(in srgb, var(--removed-code), transparent 50%);
   border-radius: 0.5em;
   padding: 0.5em 2em;
+}
+
+/* dialog */
+dialog{
+  border:none;
+  border-radius: 0.5em;
+  background-color: var(--dialog);
+  
+}
+
+dialog div{
+  display: flex;
+  gap: 0.5em;
+  margin-right: 0.5em;
+}
+
+dialog div button{
+  flex: 0 0 50%;
+  background-color: var(--interactive-area);
+  border: 2px solid transparent;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  transition: 0.3s;
+}
+
+dialog div button:hover{
+  background-color: transparent;
+  border: 2px solid var(--interactive-area);
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.2); 
+    backdrop-filter: blur(2px);
+    transition: all 0.3s ease;
+}
+
+dialog.error-dialog button{
+  flex: 1 1 100%;
 }

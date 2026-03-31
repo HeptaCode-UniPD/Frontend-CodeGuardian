@@ -11,7 +11,7 @@ const ErrorReport = ({loading, url, hasAccess} : { loading: boolean, url: string
 );
 
 export default function AddRepository() {
-    //useIsLogged();
+    useIsLogged();
     const navigate = useNavigate();
     const [url, setUrl] = useState('');
     const [loading, setLoading] = useState(false);
@@ -30,7 +30,7 @@ export default function AddRepository() {
       setHasAccess(false);
       setLoading(false);
     }
-};
+  };
 
   return (
     <div id="add-repository-page">
