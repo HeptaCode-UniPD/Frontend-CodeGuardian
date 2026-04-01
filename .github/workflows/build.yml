@@ -5,16 +5,13 @@ jobs:
   test:
     name: run tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
-          cache-dependency-path: frontend/package.json
+          cache-dependency-path: package-lock.json
       - name: Install dependencies
         run: npm install
       - name: Run Vitest with coverage
@@ -23,4 +20,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: frontend/coverage
+          path: coverage
