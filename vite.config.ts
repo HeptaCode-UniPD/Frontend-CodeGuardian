@@ -19,6 +19,8 @@ export default defineConfig({
       environment: 'jsdom',
       setupFiles: './src/test/setupTests.ts',
       clearMocks: true,
+      env: {
+        VITE_URL_USER_SERVICE: 'http://localhost:3000',},
       pool: 'forks',
       coverage: {
         provider: 'v8',
