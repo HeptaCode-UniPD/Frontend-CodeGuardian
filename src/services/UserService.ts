@@ -1,8 +1,8 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 import * as Types from '../types/types';
+import { API_BASE_URL_USER } from "../config";
 
 export async function getInfoUserByID(id: string): Promise<Types.User | undefined> {
-  const res = await fetch(`http://localhost:3000/profile?userId=${id}`, {
+  const res = await fetch(`${API_BASE_URL_USER}/profile?userId=${id}`, {
     method: "GET",
   });
 
@@ -15,7 +15,7 @@ export async function getInfoUserByID(id: string): Promise<Types.User | undefine
 };
 
 export async function checkCredentials(email: string, password: string): Promise<Types.User> {
-  const res = await fetch("http://localhost:3000/auth/login", {
+  const res = await fetch(`${API_BASE_URL_USER}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

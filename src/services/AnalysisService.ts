@@ -1,8 +1,8 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+export const API_URL = import.meta.env.VITE_API_URL || '${API_BASE_URL_USER}';
 import * as Types from '../types/types';
 
 export async function getAnalysisByUrl (url: string): Promise<Types.AnalysisReport | undefined> {
-  const res = await fetch("http://localhost:4000/analysis/request", {
+  const res = await fetch(`http://localhost:4000/analysis/request`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

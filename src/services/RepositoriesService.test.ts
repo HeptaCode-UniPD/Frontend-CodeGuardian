@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import * as RepositoriesService from './RepositoriesService';
 import * as Mock from '../test/mock';
+import { API_BASE_URL_USER } from "../config";
+
 
 vi.mock('./SessionService', () => ({
     getUserID: vi.fn().mockReturnValue('1'),
@@ -22,7 +24,7 @@ describe('RepositoriesService', () => {
 
         const result = await RepositoriesService.getRepositoriesByUser(targetId);
         expect(fetch).toHaveBeenCalledWith(
-            `http://localhost:3000/repos?userId=${targetId}`,
+            `${API_BASE_URL_USER}/repos?userId=${targetId}`,
             { method: "GET" }
         );
         expect(Array.isArray(result)).toBe(true);
@@ -84,7 +86,7 @@ describe('RepositoriesService', () => {
         vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }));
         const result = await RepositoriesService.checkRepoAccess('http://qualsiasi-url');
         expect(fetch).toHaveBeenCalledWith(
-            "http://localhost:3000/repo",
+            `${API_BASE_URL_USER}/repo`,
             expect.objectContaining({
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -112,7 +114,7 @@ describe('RepositoriesService', () => {
         const result = await RepositoriesService.deleteRepo('id-repo', 'id-utente');
 
         expect(fetch).toHaveBeenCalledWith(
-            "http://localhost:3000/repo",
+            `${API_BASE_URL_USER}/repo`,
             expect.objectContaining({
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
@@ -140,7 +142,7 @@ describe('RepositoriesService', () => {
         const result = await RepositoriesService.getRepositoryById(expected.id);
 
         expect(fetch).toHaveBeenCalledWith(
-            `http://localhost:3000/repo?repoId=${expected.id}`,
+            `${API_BASE_URL_USER}/repo?repoId=${expected.id}`,
             { method: "GET" }
         );
         expect(result).toEqual(expected);

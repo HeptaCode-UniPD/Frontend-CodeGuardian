@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import * as UserService from './UserService';
 import * as Mock from '../test/mock';
+import { API_BASE_URL_USER } from "../config";
 
 describe('UserService', () => {
   afterEach(() => {
@@ -16,7 +17,7 @@ describe('UserService', () => {
 
     const result = await UserService.getInfoUserByID(target.userId);
     expect(fetch).toHaveBeenCalledWith(
-        `http://localhost:3000/profile?userId=${target.userId}`,
+        `${API_BASE_URL_USER}/profile?userId=${target.userId}`,
         { method: "GET" }
     );
     expect(result).toEqual(target);
@@ -39,7 +40,7 @@ describe('UserService', () => {
 
     const result = await UserService.checkCredentials('test@test.com', 'password');
     expect(fetch).toHaveBeenCalledWith(
-        "http://localhost:3000/auth/login",
+        `${API_BASE_URL_USER}/auth/login`,
         {
             method: "POST",
             headers: { "Content-Type": "application/json" },

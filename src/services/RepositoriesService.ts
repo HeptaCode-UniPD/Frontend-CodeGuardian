@@ -1,9 +1,10 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+export const API_URL = import.meta.env.VITE_API_URL || '${API_BASE_URL_USER}';
 import {getUserID} from './SessionService';
 import * as Types from '../types/types';
+import { API_BASE_URL_USER } from "../config";
 
 export async function deleteRepo(idRepo: string, idUtente:string): Promise<boolean>{
-  const res = await fetch("http://localhost:3000/repo", {
+  const res = await fetch(`${API_BASE_URL_USER}/repo`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +21,7 @@ export async function deleteRepo(idRepo: string, idUtente:string): Promise<boole
 
 
 export async function getRepositoriesByUser(id: string): Promise<Types.Repository[] | undefined> {
-  const res = await fetch(`http://localhost:3000/repos?userId=${id}`, {
+  const res = await fetch(`${API_BASE_URL_USER}/repos?userId=${id}`, {
     method: "GET",
     });
 
@@ -33,7 +34,7 @@ export async function getRepositoriesByUser(id: string): Promise<Types.Repositor
 };
 
 export async function getRepositoryById(id: string): Promise<Types.Repository | undefined> {
-  const res = await fetch(`http://localhost:3000/repo?repoId=${id}`, {
+  const res = await fetch(`${API_BASE_URL_USER}/repo?repoId=${id}`, {
     method: "GET",
     });
 
@@ -48,7 +49,7 @@ export async function getRepositoryById(id: string): Promise<Types.Repository | 
 export async function checkRepoAccess(url: string): Promise<boolean> {
 
   const idUtente = getUserID('userID');
-  const res = await fetch("http://localhost:3000/repo", {
+  const res = await fetch(`${API_BASE_URL_USER}/repo`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
