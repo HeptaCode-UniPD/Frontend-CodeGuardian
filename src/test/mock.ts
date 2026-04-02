@@ -54,12 +54,18 @@ export const mock_repositories: Types.Repository[] = [
 export const mock_reports: Types.AnalysisReport[] = [
     {
         id: "1",
-        status: "finish",
+        status: "done",
         response: "Non vanno bene perché bla bla",
     },
     {
         id: "2",
-        status: "finish",
+        status: "done",
         response: "boh non lo so, non mi piace",
+    },
+    {
+        id: "3",
+        status: "processing",
+        response: "",
+        commitId: "abc123sha",
     }
 ];
