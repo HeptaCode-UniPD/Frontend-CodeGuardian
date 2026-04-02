@@ -48,7 +48,7 @@ export const NavBar = () =>(
     
     <nav>
       <SmartNavLink to="/addRepository" page="Aggiungi repository" />
-      <SmartNavLink to="/repositories" page="Repositories"/>
+      <SmartNavLink to="/repositories" page="Lista repository"/>
       <SmartNavLink to="/profile" page=""/>
     </nav>
   </header>

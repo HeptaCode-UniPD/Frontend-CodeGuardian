@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { type AnalysisReport, type Repository} from '../types/types';
-import { getAnalysisByUrl} from '../services/AnalysisService';
+import { getLastAnalysis} from '../services/AnalysisService';
 import { getRepositoryById} from '../services/RepositoriesService';
 import { getUserID} from '../services/SessionService';
 import { CircularProgress} from '../components/CircularProgress';
 import { DeleteRepoButton} from '../components/DeleteRepoButton';
+import { StartAnalysisButton} from '../components/StartAnalysisButton';
 import { useParams, Link} from 'react-router-dom';
 import { useIsLogged } from '../services/SessionService';
 
@@ -26,31 +27,26 @@ export default function DettagliRepo() {
     const [repository, setRepository] = useState<Repository | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if(!id) return;
-
-        const fetchData = async () => {
-            setLoading(true);
-            try{
-                const search_repository = await getRepositoryById(id);
-                setRepository(search_repository??null);
-                if(search_repository){
-                    const result = await getAnalysisByUrl(search_repository.url);
-                    setAnalysis(result??null);
-                }
-            }catch{
-                setAnalysis(null);
+    const fetchData = async () => {
+        if (!id) return;
+        setLoading(true);
+        try {
+            const search_repository = await getRepositoryById(id);
+            setRepository(search_repository ?? null);
+            if (search_repository) {
+                const result = await getLastAnalysis(search_repository.url);
+                setAnalysis(result ?? null);
             }
-            finally{
-            setLoading(false);}
-        }
+        } catch {setAnalysis(null);} 
+        finally {setLoading(false);}
+    };
 
+    useEffect(() => {
         fetchData();
-            
     }, [id]);
 
     if (loading) return <p>Caricamento...</p>;
-    if (!analysis || !repository) return <div id="repo-error">Analisi del repository selezionato non trovata. <Link to="/repositories">← Indietro</Link></div>;
+    if (!repository) return <div id="repo-error">Repository selezionato non trovato. <Link to="/repositories">← Indietro</Link></div>;
  
     return (
         <div id="dettagli-repo">
@@ -72,13 +68,13 @@ export default function DettagliRepo() {
                                 {/* <CircularProgress percentage={repository.pctOwasp} label="Correttezza OWASP"/> */}
                             </li>
                         </ul>
-                        <form><button id="start-all">Avvia analisi</button></form>
+                        <StartAnalysisButton url={repository.url} onSuccess={fetchData}
+                            initialJobId={analysis?.status === 'processing' ? analysis.commitId : undefined}/>
                     </div>
                 </div>
-
                 <div>
                     <h2> Suggerimenti proposti</h2>
-                    <p>{analysis.response}</p>
+                    {analysis? <p>{analysis.response}</p> : <p>Nessuna analisi disponibile. Avvia un'analisi per vedere i risultati.</p>}
                 </div>
             </div>
         </div>

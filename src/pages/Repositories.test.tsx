@@ -14,150 +14,179 @@ vi.mock('react-router-dom', async () => {
 });
 
 vi.mock('../services/RepositoriesService', () => ({
-    deleteRepo: vi.fn(),
-    getRepositoriesByUser: vi.fn(),
+  deleteRepo: vi.fn(),
+  getRepositoriesByUser: vi.fn(),
 }));
 
 vi.mock('../services/SessionService', () => ({
-    useIsLogged: vi.fn(),
-    getUserID: vi.fn(),
+  useIsLogged: vi.fn(),
+  getUserID: vi.fn(),
 }));
 
+const userRepos = Mock.mock_repositories.filter(r =>
+  Array.isArray(r.userID) ? r.userID.includes('1') : r.userID === '1'
+);
+
+const setupMocks = (repos: typeof userRepos | null = userRepos) => {
+  (sessionService.useIsLogged as any).mockReturnValue(true);
+  (sessionService.getUserID as any).mockReturnValue('1');
+  (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(repos);
+};
+
 describe('Repositories', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-        HTMLDialogElement.prototype.showModal = vi.fn().mockImplementation(function (this: HTMLDialogElement) {
-            this.setAttribute('open', '');
-        });
-        HTMLDialogElement.prototype.close = vi.fn().mockImplementation(function (this: HTMLDialogElement) {
-            this.removeAttribute('open');
-        });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    HTMLDialogElement.prototype.showModal = vi.fn().mockImplementation(function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    });
+    HTMLDialogElement.prototype.close = vi.fn().mockImplementation(function (this: HTMLDialogElement) {
+      this.removeAttribute('open');
+    });
+  });
+
+  it('mostra il messaggio di caricamento iniziale', async () => {
+    (sessionService.useIsLogged as any).mockReturnValue(true);
+    (sessionService.getUserID as any).mockReturnValue('1');
+    (repositoriesService.getRepositoriesByUser as any).mockReturnValue(new Promise(() => {}));
+
+    await act(async () => {
+      render(<MemoryRouter><Repositories /></MemoryRouter>);
     });
 
-    it('mostra il messaggio di caricamento iniziale', async () => {
-        (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue('1');
-        (repositoriesService.getRepositoriesByUser as any).mockReturnValue(new Promise(() => {}));
+    expect(screen.getByText(/Caricamento/i)).toBeInTheDocument();
+  });
 
-        await act(async () => {
-        render(<MemoryRouter><Repositories /></MemoryRouter>);
-        });
+  it('mostra la lista dei repository dopo il caricamento', async () => {
+    setupMocks();
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
 
-        expect(screen.getByText(/Caricamento/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
+    });
+    expect(screen.getByText('PoC')).toBeInTheDocument();
+  });
+
+  it('mostra il messaggio di errore se il fetch restituisce null', async () => {
+    setupMocks(null);
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
+
+    await waitFor(() => {
+      expect(screen.getByText(/La ricerca dei repository non è andata a buon fine/i)).toBeInTheDocument();
+    });
+  });
+
+  it('mostra il messaggio se l\'utente non ha repository', async () => {
+    setupMocks([]);
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Non è ancora stato inserito alcun repository/i)).toBeInTheDocument();
+    });
+  });
+
+  it('non esegue il fetch se getUserID non restituisce un id', async () => {
+    (sessionService.useIsLogged as any).mockReturnValue(true);
+    (sessionService.getUserID as any).mockReturnValue(null);
+
+    await act(async () => {
+      render(<MemoryRouter><Repositories /></MemoryRouter>);
     });
 
-    it('mostra la lista dei repository dopo il caricamento', async () => {
-        const userRepos = Mock.mock_repositories.filter(r => 
-        Array.isArray(r.userID) ? r.userID.includes('1') : r.userID === '1'
-        );
-        (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue('1');
-        (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(userRepos);
+    expect(repositoriesService.getRepositoriesByUser).not.toHaveBeenCalled();
+  });
 
-        render(<MemoryRouter><Repositories /></MemoryRouter>);
+  it('i link ai repository puntano al percorso corretto', async () => {
+    setupMocks([Mock.mock_repositories[0]]);
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
 
-        await waitFor(() => {
-        expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
-        });
-
-        expect(screen.getByText('PoC')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
     });
 
-    it('mostra il messaggio di errore se il fetch restituisce null', async () => {
-        (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue('1');
-        (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(null);
+    const link = screen.getByText('CodeGuardian').closest('a');
+    expect(link).toHaveAttribute('href', `/repository/${Mock.mock_repositories[0].id}`);
+  });
 
-        render(<MemoryRouter><Repositories /></MemoryRouter>);
+  it('mostra il pulsante di eliminazione per ogni repository', async () => {
+    setupMocks();
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
 
-        await waitFor(() => {
-        expect(screen.getByText(/La ricerca dei repository non è andata a buon fine/i)).toBeInTheDocument();
-        });
+    await waitFor(() => {
+      expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
     });
 
-    it('mostra lista vuota se l\'utente non ha repository', async () => {
-        (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue('4');
-        (repositoriesService.getRepositoriesByUser as any).mockResolvedValue([]);
+    const deleteButtons = screen.getAllByRole('button', { name: /elimina/i });
+    expect(deleteButtons).toHaveLength(userRepos.length);
+  });
 
-        render(<MemoryRouter><Repositories /></MemoryRouter>);
+  it('rimuove il repository dalla lista dopo la conferma', async () => {
+    setupMocks();
+    (repositoriesService.deleteRepo as any).mockResolvedValue(true);
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
 
-        await waitFor(() => {
-        expect(screen.getByRole('list')).toBeInTheDocument();
-        });
-
-        expect(screen.queryByRole('listitem')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
     });
 
-    it('non esegue il fetch se getUserID non restituisce un id', async () => {
-        (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue(null);
+    const deleteButtons = screen.getAllByRole('button', { name: /elimina/i });
+    await userEvent.click(deleteButtons[0]);
+    await userEvent.click(screen.getByRole('button', { name: /conferma/i }));
 
-        await act(async () => {
-        render(<MemoryRouter><Repositories /></MemoryRouter>);
-        });
+    await waitFor(() => {
+      expect(screen.queryByText('CodeGuardian')).not.toBeInTheDocument();
+    });
+    expect(screen.getByText('PoC')).toBeInTheDocument();
+  });
 
-        expect(repositoriesService.getRepositoriesByUser).not.toHaveBeenCalled();
+  // --- test search bar ---
+
+  it('mostra la search bar', async () => {
+    setupMocks();
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText(/Trova un repository/i)).toBeInTheDocument();
+    });
+  });
+
+  it('filtra i repository per nome', async () => {
+    setupMocks();
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
+
+    await waitFor(() => {
+      expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
     });
 
-    it('i link ai repository puntano al percorso corretto', async () => {
-        const userRepos = [Mock.mock_repositories[0]];
-        (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue('1');
-        (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(userRepos);
+    await userEvent.type(screen.getByPlaceholderText(/Trova un repository/i), 'CodeGuardian');
 
-        render(<MemoryRouter><Repositories /></MemoryRouter>);
+    expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
+    expect(screen.queryByText('PoC')).not.toBeInTheDocument();
+  });
 
-        await waitFor(() => {
-        expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
-        });
+  it('mostra il messaggio se la ricerca non trova risultati', async () => {
+    setupMocks();
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
 
-        const link = screen.getByText('CodeGuardian').closest('a');
-        expect(link).toHaveAttribute('href', `/repository/${Mock.mock_repositories[0].id}`);
+    await waitFor(() => {
+      expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
     });
 
-    it('mostra il pulsante di eliminazione per ogni repository', async () => {
-        const userRepos = Mock.mock_repositories.filter(r =>
-            Array.isArray(r.userID) ? r.userID.includes('1') : r.userID === '1'
-        );
-        (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue('1');
-        (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(userRepos);
+    await userEvent.type(screen.getByPlaceholderText(/Trova un repository/i), 'xyznonexistent');
 
-        render(<MemoryRouter><Repositories /></MemoryRouter>);
+    expect(screen.getByText(/Nessun repository trovato per/i)).toBeInTheDocument();
+  });
 
-        await waitFor(() => {
-            expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
-        });
+  it('la ricerca è case-insensitive', async () => {
+    setupMocks();
+    render(<MemoryRouter><Repositories /></MemoryRouter>);
 
-        const deleteButtons = screen.getAllByRole('button', { name: /elimina/i });
-        expect(deleteButtons).toHaveLength(userRepos.length);
+    await waitFor(() => {
+      expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
     });
 
-    it('rimuove il repository dalla lista dopo la conferma', async () => {
-        const userRepos = Mock.mock_repositories.filter(r =>
-            Array.isArray(r.userID) ? r.userID.includes('1') : r.userID === '1'
-        );
-        (sessionService.useIsLogged as any).mockReturnValue(true);
-        (sessionService.getUserID as any).mockReturnValue('1');
-        (repositoriesService.getRepositoriesByUser as any).mockResolvedValue(userRepos);
-        (repositoriesService.deleteRepo as any).mockResolvedValue(true);
+    await userEvent.type(screen.getByPlaceholderText(/Trova un repository/i), 'codeguardian');
 
-        render(<MemoryRouter><Repositories /></MemoryRouter>);
-
-        await waitFor(() => {
-            expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
-        });
-
-        const deleteButtons = screen.getAllByRole('button', { name: /elimina/i });
-        await userEvent.click(deleteButtons[0]);
-        await userEvent.click(screen.getByRole('button', { name: /conferma/i }));
-
-        await waitFor(() => {
-            expect(screen.queryByText('CodeGuardian')).not.toBeInTheDocument();
-        });
-
-        expect(screen.getByText('PoC')).toBeInTheDocument();
-    });
-
+    expect(screen.getByText('CodeGuardian')).toBeInTheDocument();
+    expect(screen.queryByText('PoC')).not.toBeInTheDocument();
+  });
 });

@@ -20,18 +20,18 @@ describe('NavBar', () => {
   it('mostra i link di navigazione', () => {
     renderNavBar('/profile');
     expect(screen.getByText('Aggiungi repository')).toBeInTheDocument();
-    expect(screen.getByText('Repositories')).toBeInTheDocument();
+    expect(screen.getByText('Lista repository')).toBeInTheDocument();
   });
 
   it('mostra il link come testo non cliccabile se si è nella pagina corrente', () => {
     renderNavBar('/repositories');
     expect(document.getElementById('inactive-link')).toBeInTheDocument();
-    expect(document.getElementById('inactive-link')?.textContent).toBe('Repositories');
+    expect(document.getElementById('inactive-link')?.textContent).toBe('Lista repository');
   });
 
   it('mostra il link come ancora cliccabile se non si è nella pagina corrente', () => {
     renderNavBar('/profile');
-    const link = screen.getByText('Repositories');
+    const link = screen.getByText('Lista repository');
     expect(link.tagName).toBe('A');
   });
 

@@ -149,6 +149,10 @@ summary:hover{
   margin: auto;
 }
 
+#repositories-page #no-repo{
+  text-align: center;
+}
+
 #repositories-page button.delete-button{
   background-color: transparent;
   border: 1px solid transparent;
@@ -163,7 +167,7 @@ summary:hover{
 }
 
 #repositories-page aside a,
-#analisi-block form button {
+#analisi-block button#start-all {
   flex-grow: 1;
   width: 100%;
   border-radius: 0.5em;
@@ -174,6 +178,13 @@ summary:hover{
   transition: 0.3s;
 }
 
+#dettagli-repo #analisi-block button#start-all:disabled:hover,
+#dettagli-repo #analisi-block button#start-all:disabled{
+  cursor: default;
+  background-color: var(--disable);
+  border-color: var(--disable);
+}
+
 #report-percentage .label-persentage{
   overflow-wrap: break-word;
   min-height: 3em;
@@ -181,7 +192,7 @@ summary:hover{
   
 }
 
-#dettagli-repo #analisi-block button:hover{
+#dettagli-repo #analisi-block button:hover:not(dialog button){
   background-color: var(--button);
 }
 
@@ -406,13 +417,28 @@ header nav a:nth-child(3):before{
 }
 
 #repositories-page aside{
-  flex: 20%;
+  flex: 0 0 20%;
   border-right: solid 2px var(--border);
+  padding-right: 1em;
+  padding-top: 1em;
+}
+
+#repositories-page article{
+  list-style: none;
+  flex: 0 0 80%;
+}
+
+main #repositories-page input#search-bar{
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 1em;
+  background-color: var(--interactive-area);
+  border:1px solid var(--border);
 }
 
 #repositories-page ul{
   list-style: none;
-  flex: 80%;
+  padding-left: 1em;
 }
 
 #repositories-page ul li .containerLink{
@@ -434,7 +460,6 @@ main #repositories-page aside a{
   width: auto;
   display: block;
   text-align: center;
-  margin: 1em 1em 1em 0;
   color: var(--txt);
   font-weight: 500;
   text-decoration: none;
@@ -444,7 +469,7 @@ main #repositories-page aside a{
 #login-page{
   border: 1px solid var(--border);
   max-width: 1200px;
-  margin: 3em auto;
+  margin:10% auto;
   display: flex;
   flex-wrap: wrap;
 }
@@ -497,6 +522,7 @@ main #repositories-page aside a{
   gap: 1em;
 }
 
+#repositories-page input#search-bar,
 #add-repository-page form input,
 #login-page form input{
   border-radius: 0.5em;
@@ -505,6 +531,7 @@ main #repositories-page aside a{
   padding: 0.3em 1em;
 }
 
+#repositories-page input#search-bar:focus,
 #add-repository-page form input:focus,
 #login-page form input:focus{
   outline: 2px solid var(--detail-txt);
@@ -578,7 +605,7 @@ main #repositories-page aside a{
 #profile-page{
   border: 1px solid var(--border);
   max-width: 1200px;
-  margin: 3em auto;
+  margin: 1em auto;
   padding: 1em 2em;
 }
 
@@ -644,6 +671,7 @@ main #state-div{
   border-bottom: 1px solid var(--border);
 }
 
+#repositories-page input#search-bar,
 #add-repository-page form input{
   background-color: var(--insert-url);
 }

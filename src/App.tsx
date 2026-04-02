@@ -17,41 +17,36 @@ const RootLayout = () => (
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <Login />,
+  },
+  {
     path: "/",
     element: <RootLayout />,
     children: [
-      {
-        handle: { label: "Repositories" },
-        children: [
-          {
-            path: "repositories", 
-            element: <Repositories />,
-          },
-          {
-            path: "repository/:id", 
-            element: <DettagliRepo />,
-            handle: { label: "Repository" },
-          }
-        ]
-      },
       {
         index: true,
         element: <Navigate to="/repositories" replace />,
       },
       {
-        path: "/addRepository",
+        path: "repositories",
+        element: <Repositories />,
+        handle: { label: "Lista repository" },
+      },
+      {
+        path: "repository/:id",
+        element: <DettagliRepo />,
+        handle: { label: "Repository" },
+      },
+      {
+        path: "addRepository",
         element: <AddRepository />,
         handle: { label: "Aggiungi repository" },
       },
       {
-        path: "/profile",
+        path: "profile",
         element: <UserPage />,
         handle: { label: "Profilo" },
-      },
-      {
-        path: "/login",
-        element: <Login />,
-        handle: { label: "Login" },
       },
       {
         path: "*",
