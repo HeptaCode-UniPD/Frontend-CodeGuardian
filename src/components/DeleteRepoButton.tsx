@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteRepo } from '../services/RepositoriesService';
-import { type Repository } from '../types/types';
+import { type Repository } from '../data/types';
 
 interface DeleteRepoButtonProps {
   repository: Repository;

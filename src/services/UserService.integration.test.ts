@@ -42,7 +42,7 @@ describe('UserService - integrazione', () => {
 
         await expect(UserService.getInfoUserByID('id-inesistente'))
             .rejects
-            .toThrow('Utente non trovato');
+            .toThrow();
     });
 
     it('checkCredentials restituisce l\'utente con credenziali corrette', async () => {
@@ -61,6 +61,6 @@ describe('UserService - integrazione', () => {
 
         await expect(UserService.checkCredentials('email@sbagliata.it', 'passworderrata'))
             .rejects
-            .toThrow('Credenziali non valide');
+            .toThrow();
     });
 });

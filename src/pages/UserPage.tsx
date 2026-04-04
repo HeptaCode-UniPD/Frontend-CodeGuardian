@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {getInfoUserByID} from '../services/UserService';
-import { type User} from '../types/types';
+import { type User} from '../data/types';
 import { logout, getUserID, useIsLogged} from '../services/SessionService';
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';

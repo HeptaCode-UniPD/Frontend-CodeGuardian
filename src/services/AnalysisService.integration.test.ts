@@ -20,7 +20,7 @@ describe('AnalysisService - Integration', () => {
     expect(result?.response).toBeDefined();
   });
 
-  it('getLastAnalysis: propaga correttamente l\'errore al chiamante', async () => {
+  it('getLastAnalysis: propaga correttamente l\'errore di rete al chiamante', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')));
 
     await expect(
@@ -28,11 +28,20 @@ describe('AnalysisService - Integration', () => {
     ).rejects.toThrow('Network error');
   });
 
+  it('getLastAnalysis: lancia errore se il server risponde con !ok', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      statusText: 'Not Found',
+    }));
+
+    await expect(
+      getLastAnalysis(Mock.mock_repositories[0].url)
+    ).rejects.toThrow();
+  });
+
   it('flusso completo: avvia analisi in processing e poi polling done chiama onSuccess', async () => {
     const onSuccess = vi.fn();
 
-    // prima chiamata: startNewAnalysis → processing
-    // seconda chiamata: pollAnalysisStatus → done
     let callCount = 0;
     vi.stubGlobal('fetch', vi.fn().mockImplementation(() => {
       callCount++;
@@ -68,5 +77,27 @@ describe('AnalysisService - Integration', () => {
     const response = await startNewAnalysis(Mock.mock_repositories[0].url);
     expect(response.status).toBe('done');
     expect(response.jobId).toBeUndefined();
+  });
+
+  it('flusso completo: startNewAnalysis lancia errore se il server non risponde', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      statusText: 'Service Unavailable',
+    }));
+
+    await expect(
+      startNewAnalysis(Mock.mock_repositories[0].url)
+    ).rejects.toThrow();
+  });
+
+  it('flusso completo: pollAnalysisStatus lancia errore se il server non risponde', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      statusText: 'Service Unavailable',
+    }));
+
+    await expect(
+      pollAnalysisStatus('abc123')
+    ).rejects.toThrow();
   });
 });

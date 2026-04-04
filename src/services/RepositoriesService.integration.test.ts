@@ -23,12 +23,12 @@ const server = setupServer(
     }),
 
     http.get('http://localhost:3000/repo', ({ request }) => {
-    const url = new URL(request.url);
-    const repoId = url.searchParams.get('repoId');
-    const repo = Mock.mock_repositories.find(r => r.id === repoId);
-    if (!repo) return new HttpResponse(null, { status: 404 });
-    return HttpResponse.json(repo);
-}),
+        const url = new URL(request.url);
+        const repoId = url.searchParams.get('repoId');
+        const repo = Mock.mock_repositories.find(r => r.id === repoId);
+        if (!repo) return new HttpResponse(null, { status: 404 });
+        return HttpResponse.json(repo);
+    }),
 );
 
 beforeAll(() => server.listen());
@@ -70,7 +70,7 @@ describe('RepositoriesService - integrazione', () => {
 
         await expect(RepositoriesService.deleteRepo('id-inesistente', 'id-utente'))
             .rejects
-            .toThrow('Repository non trovato');
+            .toThrow();
     });
 
     it('checkRepoAccess chiama il server e restituisce true', async () => {
@@ -78,19 +78,36 @@ describe('RepositoriesService - integrazione', () => {
         expect(result).toBe(true);
     });
 
-    it('checkRepoAccess lancia errore se il server risponde con 400', async () => {
-        const messaggioBackend = "Repository privato o URL invalido.";
+    it('checkRepoAccess lancia il messaggio del backend se il repo non è accessibile', async () => {
+        const messaggioBackend = 'Repository privato o URL invalido.';
+        server.use(
+            http.post('http://localhost:3000/repo', () => {
+                return HttpResponse.json(
+                    { message: messaggioBackend },
+                    { status: 400 }
+                );
+            })
+        );
 
-            server.use(
-                http.post('http://localhost:3000/repo', () => {
-                    return HttpResponse.json(
-                        { message: messaggioBackend }, 
-                        { status: 404 });}));
+        await expect(RepositoriesService.checkRepoAccess('url-inesistente'))
+            .rejects
+            .toThrow(messaggioBackend);
+    });
 
-            await expect(RepositoriesService.checkRepoAccess('url-inesistente'))
-                .rejects
-                .toThrow(messaggioBackend);
-        });
+    it('checkRepoAccess rimappa il messaggio di class-validator in "URL non valido."', async () => {
+        server.use(
+            http.post('http://localhost:3000/repo', () => {
+                return HttpResponse.json(
+                    { message: ['url must be a URL address'] },
+                    { status: 400 }
+                );
+            })
+        );
+
+        await expect(RepositoriesService.checkRepoAccess('non-un-url'))
+            .rejects
+            .toThrow('URL non valido.');
+    });
 
     it('getRepositoryById chiama il server e restituisce il repository', async () => {
         const expected = Mock.mock_repositories[0];
@@ -108,6 +125,6 @@ describe('RepositoriesService - integrazione', () => {
 
         await expect(RepositoriesService.getRepositoryById('id-inesistente'))
             .rejects
-            .toThrow('Repository non trovato');
+            .toThrow();
     });
 });

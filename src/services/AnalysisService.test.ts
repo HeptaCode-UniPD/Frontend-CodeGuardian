@@ -1,8 +1,9 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { getLastAnalysis, startNewAnalysis, pollAnalysisStatus } from './AnalysisService';
 import * as Mock from '../test/mock';
+import { API_BASE_URL_ANALYSIS } from '../data/config';
 
-describe('AnalysisService - Unit', () => {
+describe('AnalysisService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -17,17 +18,8 @@ describe('AnalysisService - Unit', () => {
     }));
 
     const result = await getLastAnalysis('https://github.com/HeptaCode-UniPD/CodeGuardian');
-
     expect(result).toEqual(mockReport);
     expect(result?.response).toBeDefined();
-  });
-
-  it('getLastAnalysis: lancia un errore quando fetch restituisce !ok', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
-
-    await expect(
-      getLastAnalysis('https://github.com/repo-inesistente')
-    ).rejects.toThrow('Analisi non trovata');
   });
 
   it('getLastAnalysis: chiama fetch con metodo GET e url corretto', async () => {
@@ -41,9 +33,20 @@ describe('AnalysisService - Unit', () => {
     await getLastAnalysis(url);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      `http://localhost:4000/analysis/view?url=${url}`,
-      expect.objectContaining({ method: 'GET' })
+      `${API_BASE_URL_ANALYSIS}/analysis/view?url=${url}`,
+      { method: 'GET' }
     );
+  });
+
+  it('getLastAnalysis: lancia un errore quando fetch restituisce !ok', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      statusText: 'Not Found',
+    }));
+
+    await expect(
+      getLastAnalysis('https://github.com/repo-inesistente')
+    ).rejects.toThrow('Not Found');
   });
 
   // --- startNewAnalysis ---
@@ -70,7 +73,7 @@ describe('AnalysisService - Unit', () => {
     await startNewAnalysis(url);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'http://localhost:4000/analysis/request',
+      `${API_BASE_URL_ANALYSIS}/analysis/request`,
       expect.objectContaining({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,9 +83,13 @@ describe('AnalysisService - Unit', () => {
   });
 
   it('startNewAnalysis: lancia un errore quando fetch restituisce !ok', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      statusText: 'Internal Server Error',
+    }));
 
-    await expect(startNewAnalysis('https://github.com/test')).rejects.toThrow('Errore nella richiesta di analisi.');
+    await expect(startNewAnalysis('https://github.com/test'))
+      .rejects.toThrow('Internal Server Error');
   });
 
   // --- pollAnalysisStatus ---
@@ -106,12 +113,19 @@ describe('AnalysisService - Unit', () => {
 
     await pollAnalysisStatus('abc123');
 
-    expect(mockFetch).toHaveBeenCalledWith('http://localhost:4000/analysis/status/abc123');
+    expect(mockFetch).toHaveBeenCalledWith(
+      `${API_BASE_URL_ANALYSIS}/analysis/status/abc123`,
+      { method: 'GET' }
+    );
   });
 
   it('pollAnalysisStatus: lancia un errore quando fetch restituisce !ok', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      statusText: 'Service Unavailable',
+    }));
 
-    await expect(pollAnalysisStatus('abc123')).rejects.toThrow('Errore nel polling.');
+    await expect(pollAnalysisStatus('abc123'))
+      .rejects.toThrow('Service Unavailable');
   });
 });

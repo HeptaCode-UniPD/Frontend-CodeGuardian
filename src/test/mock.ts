@@ -1,4 +1,4 @@
-import * as Types from '../types/types';
+import * as Types from '../data/types';
 
 // Mock Utente
 export const mock_user: Types.User[] = [
@@ -55,12 +55,12 @@ export const mock_reports: Types.AnalysisReport[] = [
     {
         id: "1",
         status: "done",
-        response: "Non vanno bene perché bla bla",
+        response: "Non vanno bene perché...",
     },
     {
         id: "2",
         status: "done",
-        response: "boh non lo so, non mi piace",
+        response: "boh non lo so, non mi convince",
     },
     {
         id: "3",

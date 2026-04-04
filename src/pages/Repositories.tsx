@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { getRepositoriesByUser } from '../services/RepositoriesService';
 import { useIsLogged, getUserID } from '../services/SessionService';
 import { DeleteRepoButton } from '../components/DeleteRepoButton';
-import { type Repository } from '../types/types';
+import { type Repository } from '../data/types';
 
 export default function Repositories() {
   useIsLogged();

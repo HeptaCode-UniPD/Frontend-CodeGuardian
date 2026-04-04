@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { type AnalysisReport, type Repository} from '../types/types';
+import { type AnalysisReport, type Repository} from '../data/types';
 import { getLastAnalysis} from '../services/AnalysisService';
 import { getRepositoryById} from '../services/RepositoriesService';
 import { getUserID} from '../services/SessionService';
