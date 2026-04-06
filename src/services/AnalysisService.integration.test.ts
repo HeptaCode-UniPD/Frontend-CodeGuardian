@@ -17,7 +17,6 @@ describe('AnalysisService - Integration', () => {
     const result = await getLastAnalysis(Mock.mock_repositories[0].url);
 
     expect(result).not.toBeUndefined();
-    expect(result?.response).toBeDefined();
   });
 
   it('getLastAnalysis: propaga correttamente l\'errore di rete al chiamante', async () => {

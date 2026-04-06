@@ -35,8 +35,6 @@ describe('StartAnalysisButton', () => {
     setupDialog();
   });
 
-  // test senza polling: userEvent reale
-
   it('renderizza il bottone avvia analisi', () => {
     renderComponent();
     expect(screen.getByRole('button', { name: /avvia analisi/i })).toBeInTheDocument();
@@ -48,62 +46,55 @@ describe('StartAnalysisButton', () => {
   });
 
   it('mostra il dialog di conferma al click del bottone', async () => {
-      renderComponent();
-      await act(async () => { await act(async () => {
-      await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));}); });
-      expect(screen.getByText(/Sei sicuro di voler avviare l'analisi/i)).toBeInTheDocument();
+    renderComponent();
+    await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));
+    expect(screen.getByText(/Sei sicuro di voler avviare l'analisi/i)).toBeInTheDocument();
   });
 
   it('chiude il dialog alla pressione di Annulla', async () => {
-      renderComponent();
-      await act(async () => { await act(async () => {
-      await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));}); });
-      await act(async () => { await userEvent.click(screen.getByText('Annulla')); });
-      expect(screen.getByText(/Sei sicuro di voler avviare l'analisi/i).closest('dialog'))
-          .not.toHaveAttribute('open');
+    renderComponent();
+    await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));
+    await userEvent.click(screen.getByText('Annulla'));
+    expect(screen.getByText(/Sei sicuro di voler avviare l'analisi/i).closest('dialog'))
+      .not.toHaveAttribute('open');
   });
 
   it('chiama onSuccess subito se lo stato è done', async () => {
-      const onSuccess = vi.fn();
-      (AnalysisService.startNewAnalysis as any).mockResolvedValue({ status: 'done', repoUrl: TEST_URL });
+    const onSuccess = vi.fn();
+    (AnalysisService.startNewAnalysis as any).mockResolvedValue({ status: 'done', repoUrl: TEST_URL });
 
-      renderComponent({ onSuccess });
-      await act(async () => { await act(async () => {
-      await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));}); });
-      await act(async () => { await userEvent.click(screen.getByText('Conferma')); });
+    renderComponent({ onSuccess });
+    await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));
+    await userEvent.click(screen.getByText('Conferma'));
 
-      await waitFor(() => {
-          expect(AnalysisService.startNewAnalysis).toHaveBeenCalledWith(TEST_URL);
-          expect(onSuccess).toHaveBeenCalled();
-      });
+    await waitFor(() => {
+      expect(AnalysisService.startNewAnalysis).toHaveBeenCalledWith(TEST_URL);
+      expect(onSuccess).toHaveBeenCalled();
+    });
   });
 
   it('non chiama onSuccess se startNewAnalysis fallisce', async () => {
-      const onSuccess = vi.fn();
-      (AnalysisService.startNewAnalysis as any).mockRejectedValue(new Error('Network error'));
+    const onSuccess = vi.fn();
+    (AnalysisService.startNewAnalysis as any).mockRejectedValue(new Error('Network error'));
 
-      renderComponent({ onSuccess });
-      await act(async () => { await act(async () => {
-      await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));}); });
-      await act(async () => { await userEvent.click(screen.getByText('Conferma')); });
+    renderComponent({ onSuccess });
+    await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));
+    await userEvent.click(screen.getByText('Conferma'));
 
-      await waitFor(() => { expect(onSuccess).not.toHaveBeenCalled(); });
+    await waitFor(() => { expect(onSuccess).not.toHaveBeenCalled(); });
   });
 
   it('mostra il dialog di errore se startNewAnalysis fallisce', async () => {
-      (AnalysisService.startNewAnalysis as any).mockRejectedValue(new Error('Network error'));
+    (AnalysisService.startNewAnalysis as any).mockRejectedValue(new Error('Network error'));
 
-      renderComponent();
-      await act(async () => { await act(async () => {
-      await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));}); });
-      await act(async () => { await userEvent.click(screen.getByText('Conferma')); });
+    renderComponent();
+    await userEvent.click(screen.getByRole('button', { name: /avvia analisi/i }));
+    await userEvent.click(screen.getByText('Conferma'));
 
-      await waitFor(() => {
-          expect(screen.getByText(/Errore durante l'avvio dell'analisi/i)).toBeInTheDocument();
-      });
+    await waitFor(() => {
+      expect(screen.getByText(/Errore durante l'avvio dell'analisi/i)).toBeInTheDocument();
+    });
   });
-
-  // test con polling 
 
   describe('con polling (fake timers)', () => {
     beforeEach(() => {
@@ -116,17 +107,15 @@ describe('StartAnalysisButton', () => {
 
     it('avvia il polling se lo stato è processing', async () => {
       const onSuccess = vi.fn();
-
       (AnalysisService.startNewAnalysis as any).mockResolvedValue({
         status: 'processing', repoUrl: TEST_URL, jobId: TEST_JOB_ID,
       });
       (AnalysisService.pollAnalysisStatus as any).mockResolvedValue('done');
 
       renderComponent({ onSuccess });
-      act(() => { fireEvent.click(screen.getByRole('button', { name: /avvia analisi/i })); });
-      act(() => { fireEvent.click(screen.getByText('Conferma')); });
-
-      await vi.advanceTimersByTimeAsync(3000);
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /avvia analisi/i })); });
+      await act(async () => { fireEvent.click(screen.getByText('Conferma')); });
+      await act(async () => { await vi.advanceTimersByTimeAsync(3000); });
 
       expect(AnalysisService.pollAnalysisStatus).toHaveBeenCalledWith(TEST_JOB_ID);
       expect(onSuccess).toHaveBeenCalled();
@@ -139,10 +128,9 @@ describe('StartAnalysisButton', () => {
       (AnalysisService.pollAnalysisStatus as any).mockRejectedValue(new Error('Network error'));
 
       renderComponent();
-      act(() => { fireEvent.click(screen.getByRole('button', { name: /avvia analisi/i })); });
-      act(() => { fireEvent.click(screen.getByText('Conferma')); });
-
-      await vi.advanceTimersByTimeAsync(3000);
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /avvia analisi/i })); });
+      await act(async () => { fireEvent.click(screen.getByText('Conferma')); });
+      await act(async () => { await vi.advanceTimersByTimeAsync(3000); });
 
       expect(screen.getByText(/Errore durante il controllo dello stato analisi/i)).toBeInTheDocument();
     });
@@ -152,10 +140,9 @@ describe('StartAnalysisButton', () => {
       (AnalysisService.pollAnalysisStatus as any).mockResolvedValue('done');
 
       renderComponent({ initialJobId: TEST_JOB_ID, onSuccess });
-
       expect(screen.getByRole('button', { name: /analisi in corso/i })).toBeDisabled();
 
-      await vi.advanceTimersByTimeAsync(3000);
+      await act(async () => { await vi.advanceTimersByTimeAsync(3000); });
 
       expect(AnalysisService.pollAnalysisStatus).toHaveBeenCalledWith(TEST_JOB_ID);
       expect(onSuccess).toHaveBeenCalled();
@@ -168,11 +155,9 @@ describe('StartAnalysisButton', () => {
       (AnalysisService.pollAnalysisStatus as any).mockResolvedValue('processing');
 
       renderComponent();
-      act(() => { fireEvent.click(screen.getByRole('button', { name: /avvia analisi/i })); });
-      act(() => { fireEvent.click(screen.getByText('Conferma')); });
-
-      await vi.advanceTimersByTimeAsync(15 * 60 * 1000 + 3000);
-      await act(async () => {});
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /avvia analisi/i })); });
+      await act(async () => { fireEvent.click(screen.getByText('Conferma')); });
+      await act(async () => { await vi.advanceTimersByTimeAsync(15 * 60 * 1000 + 3000); });
 
       expect(screen.getByText(/sta impiegando troppo tempo/i)).toBeInTheDocument();
     });
