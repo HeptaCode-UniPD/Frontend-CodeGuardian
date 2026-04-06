@@ -39,5 +39,9 @@ export async function del<T>(url: string, body: unknown, options?: HttpOptions):
   });
   if (!res.ok) return handleError(res, options);
   if (res.status === 204 || res.headers.get('content-length') === '0') return;
-  return res.json();
+  try {
+    return await res.json();
+  } catch {
+    return;
+  }
 }

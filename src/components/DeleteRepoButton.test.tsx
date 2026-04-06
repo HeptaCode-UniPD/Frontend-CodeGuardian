@@ -100,4 +100,21 @@ describe('DeleteRepoButton', () => {
     );
     expect(screen.getByText('Rimuovi')).toBeInTheDocument();
   });
+
+  it('chiude il dialog di errore al click di Ok', async () => {
+    (RepositoriesService.deleteRepo as any).mockRejectedValue(new Error('Network error'));
+
+    renderComponent();
+    await userEvent.click(screen.getByRole('button', { name: /elimina/i }));
+    await userEvent.click(screen.getByText('Conferma'));
+
+    await waitFor(() => {
+        expect(screen.getByText(/Errore durante l'eliminazione/i)).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByText('Ok'));
+
+    expect(screen.getByText(/Errore durante l'eliminazione/i).closest('dialog'))
+        .not.toHaveAttribute('open');
+  });
 });

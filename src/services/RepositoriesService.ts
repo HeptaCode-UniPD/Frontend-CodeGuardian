@@ -12,7 +12,7 @@ export async function getRepositoryById(id: string): Promise<Types.Repository> {
 }
 
 export async function deleteRepo(id: string, userID: string): Promise<void> {
-  await del(`${API_BASE_URL_USER}/repo?repoId=${id}&userId=${userID}`, { userId: userID });
+  await del(`${API_BASE_URL_USER}/repo`, { idUtente: userID, idRepo: id });
 }
 
 export async function checkRepoAccess(url: string): Promise<boolean> {

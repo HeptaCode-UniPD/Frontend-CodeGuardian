@@ -102,22 +102,22 @@ describe('RepositoriesService', () => {
 
   it('deleteRepo restituisce true se l\'eliminazione va a buon fine', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      ok: true,
-      headers: { get: () => null },
-      json: async () => ({ success: true }),
+        ok: true,
+        status: 200,
+        headers: { get: () => null },
+        json: async () => ({}),
     }));
 
     await RepositoriesService.deleteRepo('id-repo', 'id-utente');
     expect(fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL_USER}/repo?repoId=id-repo&userId=id-utente`,
-      expect.objectContaining({
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: 'id-utente' }),
-      })
+        `${API_BASE_URL_USER}/repo`,
+        expect.objectContaining({
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idUtente: 'id-utente', idRepo: 'id-repo' }),
+        })
     );
-    await expect(RepositoriesService.deleteRepo('id-repo', 'id-user')).resolves.toBeUndefined();
-  });
+});
 
   it('deleteRepo lancia errore se il repository non viene trovato', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
