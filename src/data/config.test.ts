@@ -12,7 +12,7 @@ describe('config', () => {
     const { API_BASE_URL_USER, API_BASE_URL_ANALYSIS } = await import('./config');
 
     expect(API_BASE_URL_USER).toBe('http://3.65.40.23:3000');
-    expect(API_BASE_URL_ANALYSIS).toBe('http://3.121.200.58:4000');
+    expect(API_BASE_URL_ANALYSIS).toBe('http://35.159.79.7.58:4000');
   });
 
   it('usa le variabili d\'ambiente se definite', async () => {
