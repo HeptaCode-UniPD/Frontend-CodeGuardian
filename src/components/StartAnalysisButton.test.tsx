@@ -16,7 +16,7 @@ const TEST_JOB_ID = 'abc123sha';
 const renderComponent = (props?: Partial<React.ComponentProps<typeof StartAnalysisButton>>) =>
   render(
     <MemoryRouter>
-      <StartAnalysisButton url={TEST_URL} {...props} />
+      <StartAnalysisButton url={TEST_URL} isLast={false} {...props} />
     </MemoryRouter>
   );
 
@@ -43,6 +43,11 @@ describe('StartAnalysisButton', () => {
   it('mostra il messageButton personalizzato', () => {
     renderComponent({ messageButton: 'Lancia analisi' });
     expect(screen.getByText('Lancia analisi')).toBeInTheDocument();
+  });
+
+  it('disabilita il bottone se isLast è true', () => {
+    renderComponent({ isLast: true });
+    expect(screen.getByRole('button', { name: /avvia analisi/i })).toBeDisabled();
   });
 
   it('mostra il dialog di conferma al click del bottone', async () => {
@@ -119,6 +124,20 @@ describe('StartAnalysisButton', () => {
 
       expect(AnalysisService.pollAnalysisStatus).toHaveBeenCalledWith(TEST_JOB_ID);
       expect(onSuccess).toHaveBeenCalled();
+    });
+
+    it('mostra il dialog di errore se il polling restituisce error', async () => {
+      (AnalysisService.startNewAnalysis as any).mockResolvedValue({
+        status: 'processing', repoUrl: TEST_URL, jobId: TEST_JOB_ID,
+      });
+      (AnalysisService.pollAnalysisStatus as any).mockResolvedValue('error');
+
+      renderComponent({ messageErrorAnalysis: 'Dettaglio errore' });
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /avvia analisi/i })); });
+      await act(async () => { fireEvent.click(screen.getByText('Conferma')); });
+      await act(async () => { await vi.advanceTimersByTimeAsync(3000); });
+
+      expect(screen.getByText(/L'analisi ha riscontrato un errore/i)).toBeInTheDocument();
     });
 
     it('mostra il dialog di errore se il polling fallisce', async () => {

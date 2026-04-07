@@ -7,12 +7,13 @@ interface StartAnalysisButtonProps {
   onSuccess?: () => void;
   initialJobId?:string;
   isLast:boolean;
+  messageErrorAnalysis?:string;
 }
 
 const POLL_INTERVAL_MS = 3000;
 const POLL_TIMEOUT_MS = 15 * 60 * 1000; // 15 minuti
 
-export const StartAnalysisButton = ({ url, messageButton, onSuccess, initialJobId, isLast}: StartAnalysisButtonProps) => {
+export const StartAnalysisButton = ({ url, messageButton, onSuccess, initialJobId, isLast, messageErrorAnalysis}: StartAnalysisButtonProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const errorDialogRef = useRef<HTMLDialogElement>(null);
   const [errorMessage, setErrorMessage] = useState('');
@@ -47,7 +48,7 @@ export const StartAnalysisButton = ({ url, messageButton, onSuccess, initialJobI
         } else if (status === 'error') {
           clearInterval(interval);
           setIsPolling(false);
-          setErrorMessage("L'analisi ha riscontrato un errore.");
+          setErrorMessage(`L'analisi ha riscontrato un errore. \n${messageErrorAnalysis}`);
           errorDialogRef.current?.showModal();
         }
         // se 'processing', continua il polling
