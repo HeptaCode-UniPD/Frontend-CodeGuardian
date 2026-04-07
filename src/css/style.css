@@ -143,7 +143,7 @@ summary:hover{
 
 #repositories-page button.delete-button:before
 {
-  content: url('public/assets/trash.svg');
+  content: url('../../public/assets/trash.svg');
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.5em;
@@ -255,7 +255,7 @@ summary:hover{
 
 #dettagli-repo button.delete-button:before
 {
-  content: url('public/assets/trash.svg');
+  content: url('../../public/assets/trash.svg');
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.5em;
@@ -270,7 +270,7 @@ summary:hover{
 
 #dettagli-repo aside a[target="_blank"]::before
 {
-  content: url('public/assets/github-logo.svg');
+  content: url('../../public/assets/github-logo.svg');
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.5em;
@@ -387,7 +387,7 @@ header nav a.profile{
 
 header nav p:nth-child(1):before,
 header nav a:nth-child(1):before{
-  content: url('public/assets/addRepo.svg');
+  content: url('../../public/assets/addRepo.svg');
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.5em;
@@ -395,7 +395,7 @@ header nav a:nth-child(1):before{
 
 header nav p:nth-child(2):before,
 header nav a:nth-child(2):before{
-  content: url('public/assets/repo.svg');
+  content: url('../../public/assets/repo.svg');
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.5em;
@@ -407,7 +407,7 @@ header nav a:nth-child(2):before{
 
 header nav p:nth-child(3):before,
 header nav a:nth-child(3):before{
-  content: url('public/assets/profile.svg');
+  content: url('../../public/assets/profile.svg');
   display: inline-block;
   vertical-align: middle;
 }
@@ -476,7 +476,7 @@ main #repositories-page aside a{
 }
 
 #login-page #login-image::before{
-  content: url('public/assets/login.svg');
+  content: url('../../public/../../public/assets/login.svg');
   display: inline-block;
   vertical-align: middle;
   margin: 3em;
@@ -629,7 +629,7 @@ main #repositories-page aside a{
 }
 
 #profile-page #avatar{
-  content: url('public/assets/avatar.svg');
+  content: url('../../public/assets/avatar.svg');
   display: inline-block;
   vertical-align: middle;
   margin: 3em;
@@ -646,7 +646,7 @@ main #repositories-page aside a{
 }
 
 #logout::before{
-  content: url('public/assets/sign-out.svg');
+  content: url('../../public/assets/sign-out.svg');
   display: inline-block;
   vertical-align: middle;
   margin-right: 0.5em;
