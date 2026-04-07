@@ -64,6 +64,7 @@ export const mock_reports: Types.AnalysisReport[] = [
             { agentName: 'test', summary: 'Buona copertura test', report: '# Report Test\nGlobal Maturity Score: 85' },
             { agentName: 'docs', summary: 'Documentazione assente', report: '# Report Docs\nGlobal Maturity Score: 0' },
         ],
+        isLatest:false,
     },
     {
         status: 'done',
@@ -75,6 +76,7 @@ export const mock_reports: Types.AnalysisReport[] = [
         analysisDetails: [
             { agentName: 'owasp', summary: 'Rischi medi', report: '# Report OWASP\nGlobal Maturity Score: 70' },
         ],
+        isLatest:false,
     },
     {
         status: 'processing',
@@ -82,5 +84,6 @@ export const mock_reports: Types.AnalysisReport[] = [
         jobId: 'job-3',
         commitId: 'ghi789sha',
         date: new Date('2026-04-06T18:00:00.000Z'),
+        isLatest:false,
     },
 ];
