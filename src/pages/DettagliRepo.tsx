@@ -69,7 +69,7 @@ export default function DettagliRepo() {
                                 <CircularProgress percentage={analysis?.scores?.[0]??0} label="Correttezza OWASP"/>
                             </li>
                         </ul>
-                        <StartAnalysisButton url={repository.url} onSuccess={fetchData} initialJobId={analysis?.status === 'processing' && !analysis?.error ? analysis.jobId : undefined} 
+                        <StartAnalysisButton url={repository.url} onSuccess={fetchData} initialJobId={analysis?.status === 'processing' ? analysis.jobId : undefined} 
                         isLast={analysis?.isLatest ?? false} messageErrorAnalysis={analysis?.error ?? undefined}/>
                     </div>
                 </div>
