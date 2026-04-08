@@ -70,7 +70,7 @@ export default function DettagliRepo() {
                             </li>
                         </ul>
                         <StartAnalysisButton url={repository.url} onSuccess={fetchData} initialJobId={analysis?.status === 'processing' ? analysis.jobId : undefined} 
-                        isLast={analysis?.isLatest ?? false} messageErrorAnalysis={analysis?.error ?? undefined} error={analysis?.status === 'processing'? true : false}/>
+                        isLast={analysis?.isLatest ?? false} messageErrorAnalysis={analysis?.error ?? undefined} error={analysis?.status === 'error'? true : false}/>
                     </div>
                 </div>
                 <div id="analysis-report">
