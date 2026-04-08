@@ -1,0 +1,816 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  /* font */
+  --normal-txt: Segoe UI, SegoeUI, Arial, sans-serif
+  --code-txt: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* colori di default */
+  --txt : #f2f2f2;
+  --button: #3B8640;
+  --border: #3D444D;
+  --insert-url: #2d3743;
+  --disable: #32363a;
+  --interactive-area: #262C36;
+  --bgcolor: #212830;
+  --code: #323c48;
+  --nav-bg: #151B23;
+  --dialog: #0d1116;
+  --added-code: #516525;
+  --removed-code: #791313;
+  --cancell: #ad0d0d;
+  --detail-txt: #9198A1;
+  --visited-link: #478be6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+main{
+  margin:0 20px;
+}
+
+body{
+  font-size: 100%;
+  line-height: 1.5em;
+  font-family: var(--normal-txt);
+  background-color: var(--bgcolor);
+  color: var(--txt);
+  font-weight: lighter;
+  scroll-behavior: smooth;
+}
+
+button, 
+label,
+input{
+  font-family: var(--normal-txt);
+  font-size: 100%;
+}
+
+button:hover{
+  cursor: pointer;
+}
+
+summary:hover{
+  cursor: pointer;
+}
+
+/* DETTAGLIREPO  */
+#dettagli-repo .diffCode{
+  height: 25em;
+  overflow: auto;
+}
+
+.percentage {
+  position: relative;
+  display: inline-block;
+  --radius: 50;
+  --stroke-width: 8;
+  --normalized-radius: calc(var(--radius) - (var(--stroke-width) / 2));
+  --pi: 3.14159265359;
+  --circumference: calc(2 * var(--pi) * var(--normalized-radius));
+}
+
+.percentage svg {
+  transform: rotate(-90deg);
+}
+
+.circle-bg, .circle-progress {
+  stroke-width: var(--stroke-width);
+  r: var(--normalized-radius);
+  fill: transparent;
+}
+
+.circle-bg {
+  stroke: #262c36;
+  cx: 50;
+  cy: 50;
+}
+
+.circle-progress {
+  fill: transparent;
+  stroke-dasharray: var(--circumference);
+  stroke-dashoffset: calc(var(--circumference) - (var(--percentage) / 100 * var(--circumference)));
+  transition: stroke-dashoffset 1s ease-out;
+  stroke-linecap: round;
+  cx: 50;
+  cy: 50;
+}
+
+.top-performance { stroke: #22c55e; }
+.medium-performance { stroke: #f97316; }
+.bad-performance { stroke: #ef4444; }
+
+.percentage-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+}
+
+.label-persentage{
+  display: block;
+}
+
+#report-percentage {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  gap: 0.5em;
+  padding: 0;
+  align-items: stretch;
+}
+
+#report-percentage li {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+#report-percentage li form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 0;
+}
+
+#repositories-page button.delete-button:before
+{
+  content: url('/trash.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+  margin: auto;
+}
+
+#repositories-page #no-repo{
+  text-align: center;
+}
+
+#repositories-page button.delete-button{
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.5em;
+  padding:0 0.5em;
+  padding: 0.2em 0.5em;
+  transition: 0.3s;
+}
+
+#repositories-page button.delete-button:hover{
+  border: 1px solid var(--detail-txt);
+}
+
+#repositories-page aside a,
+#analisi-block button#start-all {
+  flex-grow: 1;
+  width: 100%;
+  border-radius: 0.5em;
+  border: solid 2px var(--button);
+  background-color: transparent;
+  padding: 0.5em;
+  margin-top: 0.7em;
+  transition: 0.3s;
+}
+
+#dettagli-repo #analisi-block button#start-all:disabled:hover,
+#dettagli-repo #analisi-block button#start-all:disabled{
+  cursor: default;
+  background-color: var(--disable);
+  border-color: var(--disable);
+}
+
+#report-percentage .label-persentage{
+  overflow-wrap: break-word;
+  min-height: 3em;
+  margin-top: 0.2em;
+  
+}
+
+#dettagli-repo #analisi-block button:hover:not(dialog button){
+  background-color: var(--button);
+}
+
+#repositories-page aside a,
+#dettagli-repo #analisi-block button#start-all{
+  margin-top: 0;
+  background-color: var(--button);
+  width: 100%;
+  min-height: 0;
+  transition: 0.3s;
+}
+
+#repositories-page aside a:hover,
+#dettagli-repo #analisi-block button#start-all:hover{
+  background-color: transparent;
+}
+
+#dettagli-repo #details-repo-content{
+  display: flex;
+  gap: 1em;
+}
+
+#dettagli-repo #analisi-block{
+  flex: 0 0 30%;
+  padding: 0 1em;
+  border-right: solid 2px var(--border);
+}
+
+#dettagli-repo aside{
+  border-bottom: solid 1px var(--border);
+  display: flex;
+  margin: 0;
+  gap: 0.5em;
+}
+
+#dettagli-repo aside h1{
+ margin: 0.7em auto 0.7em 0;
+}
+
+#dettagli-repo aside .delete-button,
+#dettagli-repo aside a{
+  margin: auto 0;
+}
+
+#repo-error a,
+#dettagli-repo button.delete-button,
+#dettagli-repo aside a{
+  background-color: var(--interactive-area);
+  border: 1px solid var(--border);
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+#dettagli-repo button.delete-button:hover{
+  background-color: var(--border);
+}
+
+#dettagli-repo button.delete-button:before
+{
+  content: url('/trash.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+
+#repo-error a,
+#dettagli-repo aside a[target="_blank"]
+{
+  background-color: var(--border);
+  color: var(--txt);
+}
+
+#dettagli-repo aside a[target="_blank"]::before
+{
+  content: url('/github-logo.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+
+#repo-error a:hover,
+#dettagli-repo aside a[target="_blank"]:hover
+{
+  background-color: transparent;
+}
+
+#repo-error a[data-discover="true"],
+#dettagli-repo aside a[data-discover="true"]
+{
+  color: var(--detail-txt);
+  font-weight: 500;
+}
+
+#dettagli-repo aside a[data-discover="true"]:hover
+{
+  background-color: var(--border);
+  color: var(--txt);
+}
+
+#dettagli-repo #reason{
+  padding-bottom: 1em;
+  border-bottom: 1px solid var(--border);
+}
+
+#repo-error{
+  max-width: 1200px;
+  margin: 2em auto;
+  text-align: center;
+}
+
+#repo-error a[data-discover="true"]{
+  margin-left: 0.5em;
+  color: var(--txt);
+}
+
+
+
+/* --------- NAV --------- */
+
+header{
+  display: flex;
+  background-color: var(--nav-bg);
+  border-bottom: solid 2px var(--border);
+  margin: -0.5em -0.5em 0 -0.5em;
+  padding: 0.5em 1em 2em 1em;
+}
+
+header h1{
+  margin-right: 1em;
+}
+
+header nav{
+  margin-left: auto;
+  margin-right: 0;
+  margin-top: 1em;
+}
+
+#current-page{
+  display: inline;
+}
+
+#breadcrumb{
+  padding-top: 0.4em;
+  font-weight: normal;
+  font-size: 1.3em;
+}
+
+#breadcrumb a{
+  color: var(--txt);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#breadcrumb a:hover{
+  text-decoration: underline;
+}
+
+#breadcrumb a:visited{
+  color: var(--visited-link);
+}
+
+header nav p#inactive-link{
+  display: inline;
+  background-color: var(--interactive-area);
+}
+
+header nav p,
+header nav a{
+  border-radius: 0.5em;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  border: solid 1px var(--border);
+  margin-left: 1em;
+  color: var(--txt);
+  min-width: 35px;
+  min-height: 35px;
+  transition: 0.3s;
+}
+
+header nav a:hover{
+  background-color: var(--interactive-area);
+}
+
+header nav p.profile,
+header nav a.profile{
+  border-radius: 50%;
+  padding: 0.5em 0.6em;
+}
+
+header nav p:nth-child(1):before,
+header nav a:nth-child(1):before{
+  content: url('/addRepo.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+
+header nav p:nth-child(2):before,
+header nav a:nth-child(2):before{
+  content: url('/repo.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+
+#user-not-found{
+  text-align: center;
+}
+
+header nav p:nth-child(3):before,
+header nav a:nth-child(3):before{
+  content: url('/profile.svg');
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ----- REPOSITORIES ------ */
+#repositories-page{
+  display: flex;
+}
+
+#repositories-page aside{
+  flex: 0 0 20%;
+  border-right: solid 2px var(--border);
+  padding-right: 1em;
+  padding-top: 1em;
+}
+
+#repositories-page article{
+  list-style: none;
+  flex: 0 0 80%;
+}
+
+main #repositories-page input#search-bar{
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 1em;
+  background-color: var(--interactive-area);
+  border:1px solid var(--border);
+}
+
+#repositories-page ul{
+  list-style: none;
+  padding-left: 1em;
+}
+
+#repositories-page ul li .containerLink{
+  border: solid 2px var(--border);
+  border-radius: 0.5em;
+  padding: 0.2em 1em;
+  display: flex;
+  margin-bottom: 1em;
+}
+
+#repositories-page ul a{
+  color: var(--txt);
+  text-decoration: none;
+  width: 100%;
+  margin: auto;
+}
+
+main #repositories-page aside a{
+  width: auto;
+  display: block;
+  text-align: center;
+  color: var(--txt);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* ----- LOGIN ------ */
+#login-page{
+  border: 1px solid var(--border);
+  max-width: 1200px;
+  margin:10% auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#login-page #login-image::before{
+  content: url('/login.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin: 3em;
+  flex: 1 1 50%;
+}
+
+#login-page form{
+  background-color: var(--border);
+  flex: 1 1 50%;
+  padding: 3em;
+}
+
+#add-repository-page form legend,
+#login-page form legend{
+  font-size: 2em;
+  font-weight: 500;
+  text-align:center;
+  margin-bottom: 1.5em;
+}
+
+#add-repository-page form div:has(input),
+#login-page form div:has(input){
+  display: flex;
+  margin-bottom: 1em;
+}
+
+#add-repository-page form label,
+#login-page form label{
+  flex: 0 0 20%;
+  margin-right: 0.5em;
+}
+
+#add-repository-page form input,
+#login-page form input{
+  flex: 80%;
+}
+
+#login-page form div:has(button){
+  display: flex;
+  margin-top: 3em;
+}
+
+#login-page form div:has(button):last-of-type{
+  gap: 1em;
+}
+
+#repositories-page input#search-bar,
+#add-repository-page form input,
+#login-page form input{
+  border-radius: 0.5em;
+  border:none;
+  background-color: var(--bgcolor);
+  padding: 0.3em 1em;
+}
+
+#repositories-page input#search-bar:focus,
+#add-repository-page form input:focus,
+#login-page form input:focus{
+  outline: 2px solid var(--detail-txt);
+}
+
+#add-repository-page form label,
+#login-page form label{
+  padding: 0.3em auto;
+}
+
+#add-repository-page form button,
+#add-repository-page form a#annulla,
+#logout,
+#profile-page article button,
+#login-page form button{
+  flex:1 1 50%;
+  border-radius: 0.5em;
+  padding: 0.3em 1em;
+  transition: 0.3s;
+}
+
+#add-repository-page form a#annulla,
+#login-page form button#reset-button{
+  border: 2px solid var(--bgcolor);
+  background-color: transparent;
+}
+
+#login-page form button#login{
+  background-color: var(--bgcolor);
+  color:var(--txt);
+  border: 2px solid transparent;
+}
+
+#login-page form button#login:hover,
+#login-page form button#reset-button:hover{
+  background-color: transparent;
+  border-color: transparent;
+}
+
+#add-repository-page button:disabled,
+#add-repository-page button:disabled:hover,
+#login-page form button#login:disabled,
+#login-page form button#reset-button:disabled{
+  background-color: var(--disable);
+  color: var(--detail-txt);
+  border:2px solid var(--disable);
+  cursor: default;
+}
+
+#login-page form button#password-icon{
+  background-color: transparent;
+  border:none;
+  flex: 1 1 5%;
+  margin-left: -3em;
+}
+
+#add-repository-page h1,
+#login-page h1{
+  position:absolute;
+  left: -100%;
+}
+
+#email-not-valid,
+#loading{
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+/* ----- LOGIN ------ */
+#add-repository-page,
+#profile-page{
+  border: 1px solid var(--border);
+  max-width: 1200px;
+  margin: 1em auto;
+  padding: 1em 2em;
+}
+
+#profile-page article{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#profile-page article div{
+  flex: 50%;
+}
+
+#profile-page article dl{
+  flex: 50%;
+}
+
+#profile-page article dt{
+  float: left;
+  margin-right: 0.5em;
+}
+
+#profile-page #avatar{
+  content: url('/avatar.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin: 3em;
+}
+
+#logout{
+  width: 100%;
+  border: 2px solid var(--border);
+  background-color: transparent;
+}
+
+#logout:hover{
+  background-color: var(--border);
+}
+
+#logout::before{
+  content: url('/sign-out.svg');
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+
+/* ----- ADD REPOSITORY ------ */
+main #add-repository-page{
+  border: none;
+}
+
+main #state-div:has(#hint),
+main #state-div:has(#check-info){
+  padding-bottom: 0;
+}
+
+main #state-div{
+  padding-bottom: 2.5em;
+}
+
+#add-repository-page form legend{
+  text-align: left;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid var(--border);
+}
+
+#repositories-page input#search-bar,
+#add-repository-page form input{
+  background-color: var(--insert-url);
+}
+
+#add-repository-page form #form-actions{
+  margin: 0 0 0 auto;
+  width: fit-content;
+}
+
+#add-repository-page form a#annulla{
+  border: 2px solid var(--detail-txt);
+  margin-right: 1em;
+  text-decoration: none;
+  color: var(--txt);
+  font-weight: 500;
+  padding: 0.3em 3em;
+  transition: 0.3s;
+}
+
+#add-repository-page form button{
+  border: 2px solid var(--button);
+  background-color: var(--button);
+  text-decoration: none;
+  color: var(--txt);
+  font-weight: 500;
+  padding: 0.3em 3em;
+  transition: 0.3s;
+}
+
+#add-repository-page form a#annulla:hover{
+  border-color:transparent;
+}
+
+#add-repository-page form button:hover{
+  background-color: transparent;
+}
+
+#add-repository-page form p#hint{
+  color: var(--detail-txt);
+}
+
+.error{
+  color: var(--txt);
+  background-color: color-mix(in srgb, var(--removed-code), transparent 50%);
+  border-radius: 0.5em;
+  padding: 0.5em 2em;
+}
+
+/* dialog */
+dialog{
+  border:none;
+  border-radius: 0.5em;
+  background-color: var(--dialog);
+  
+}
+
+dialog div{
+  display: flex;
+  gap: 0.5em;
+  margin-right: 0.5em;
+}
+
+dialog div button{
+  flex: 0 0 50%;
+  background-color: var(--interactive-area);
+  border: 2px solid transparent;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  transition: 0.3s;
+}
+
+dialog div button:hover{
+  background-color: transparent;
+  border: 2px solid var(--interactive-area);
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.2); 
+    backdrop-filter: blur(2px);
+    transition: all 0.3s ease;
+}
+
+dialog.error-dialog button{
+  flex: 1 1 100%;
+}
+
+/* REPORT ANALYSIS */
+#dettagli-repo .report h2,
+#dettagli-repo .report h3{
+  font-size: 1em;
+} 
+
+#dettagli-repo .report summary.title-area{
+  font-size: 1.3em;
+  font-weight: 500;
+} 
+
+#dettagli-repo details[open].report summary.title-area{
+  border-bottom: 1px solid var(--detail-txt);
+  padding-bottom: 0.5em;
+} 
+
+#dettagli-repo h2 span{
+  font-weight: normal;
+  font-style: italic;
+  font-size: 1em;
+} 
+
+
+#dettagli-repo .report h1{
+  display: none;
+} 
+
+#dettagli-repo .report pre{
+  background-color: var(--code);
+  padding: 1em;
+  border: 1px solid var(--detail-txt);
+  border-radius: 0.5em;
+  overflow-x: auto;
+} 
+
+#dettagli-repo .report{
+  background-color: var(--interactive-area);
+  padding: 0.5em 2em;
+  border-radius: 0.5em;
+  margin-bottom: 1em;
+} 
+
+#dettagli-repo details.report{
+  width: 100%;
+} 
+
+#dettagli-repo #analysis-report{
+  flex: 1 1 70%;
+  min-width: 0;
+}
+
+#dettagli-repo details.report .report-content {
+  max-height: fit-content;
+  transition: max-height 0.3s ease;
+}
