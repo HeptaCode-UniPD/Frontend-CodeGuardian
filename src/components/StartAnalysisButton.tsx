@@ -83,7 +83,7 @@ export const StartAnalysisButton = ({ url, messageButton, onSuccess, initialJobI
 
   return (
     <>
-      <button id="start-all" disabled={isPolling || isLast && error} onClick={() => dialogRef.current?.showModal()}>
+      <button id="start-all" disabled={isPolling || (isLast && !error)} onClick={() => dialogRef.current?.showModal()}>
         {isPolling ? 'Analisi in corso...' : (messageButton ?? 'Avvia analisi')}
       </button>
 

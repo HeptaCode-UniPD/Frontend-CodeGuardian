@@ -16,7 +16,7 @@ const TEST_JOB_ID = 'abc123sha';
 const renderComponent = (props?: Partial<React.ComponentProps<typeof StartAnalysisButton>>) =>
   render(
     <MemoryRouter>
-      <StartAnalysisButton url={TEST_URL} isLast={false} {...props} />
+      <StartAnalysisButton url={TEST_URL} isLast={false} error={false} {...props} />
     </MemoryRouter>
   );
 
